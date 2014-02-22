@@ -9,10 +9,14 @@ import javax.swing.JOptionPane;
 
 import scrabble.game.tiletype.TileType;
 
+/**
+ * @author Robert G
+ *
+ */
 public class Tile extends JButton {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private TileType type;
 
 	public Tile(int x, int y) {
@@ -33,7 +37,7 @@ public class Tile extends JButton {
 			}
 		});
 	}
-	
+
 	public TileType getTileType() {
 		return this.type;
 	}

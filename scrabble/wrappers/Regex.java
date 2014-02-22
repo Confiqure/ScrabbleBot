@@ -3,6 +3,7 @@ package scrabble.wrappers;
 import java.awt.Point;
 
 /**
+ * @author MehSki11zOwn
  * Class containing all regex data from each move possibility.
  */
 public class Regex {

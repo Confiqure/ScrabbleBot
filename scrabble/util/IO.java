@@ -8,6 +8,10 @@ import java.io.IOException;
 
 import scrabble.game.board.Board;
 
+/**
+ * @author Robert G
+ *
+ */
 public class IO {
 
 	public static void saveTiles(Board board, File file, String fileName) {
@@ -28,24 +32,24 @@ public class IO {
 			System.err.println("Unable to save tiles!");
 		}
 	}
-	
+
 	public static void loadTiles(Board board, File directory, String fileName) {
 		final File file = new File(directory, fileName);
-    	if (file.exists()) {
-    		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-    			String line;
-    			while ((line = br.readLine()) != null) {
-    				final String[] splits = line.split(", ");
-    				for (String inf : splits) {
-    					final String[] vars = inf.split("#");
-    					board.getTiles()[Integer.parseInt(vars[0])][Integer.parseInt(vars[1])].setText(vars[2]);
-    				}
-    			}
-    			br.close();
-    		} catch (final IOException | NumberFormatException e) {
-    			System.err.println("Unable to load saved tiles!");
-    		}
-    	}
+		if (file.exists()) {
+			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+				String line;
+				while ((line = br.readLine()) != null) {
+					final String[] splits = line.split(", ");
+					for (String inf : splits) {
+						final String[] vars = inf.split("#");
+						board.getTiles()[Integer.parseInt(vars[0])][Integer.parseInt(vars[1])].setText(vars[2]);
+					}
+				}
+				br.close();
+			} catch (final IOException | NumberFormatException e) {
+				System.err.println("Unable to load saved tiles!");
+			}
+		}
 	}
 
 }

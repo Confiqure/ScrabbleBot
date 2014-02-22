@@ -29,6 +29,6 @@ public class FontLoader {
 		}
 		return new Font("Segoe UI Semibold", style, size);
 	}
-	
+
 }
 

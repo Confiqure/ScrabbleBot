@@ -11,18 +11,18 @@ import scrabble.ui.UI;
  */
 public class Scrabble {
 
-    /**
-     * Main method.
-     */
-    public static void main(final String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
+	/**
+	 * Main method.
+	 */
+	public static void main(final String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
 				new UI();
 			}
-        	
-        });
-    }
-    
+
+		});
+	}
+
 }
