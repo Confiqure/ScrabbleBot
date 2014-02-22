@@ -10,9 +10,16 @@ import java.util.ArrayList;
  * @author MehSki11zOwn
  */
 public class MoveFinder {
+    private ArrayList<Scrabble.Regex> board = new ArrayList<>();
 
-    public void getValidTiles() {
-        Scrabble.board = new ArrayList<>();
+    /**
+     * Tests for different possible move combinations and builds an ArrayList containing them all. Returns an ArrayList containing Scrabble.Regex entries.
+     *
+     * @return a list of possible moves
+     * @see    java.util.ArrayList
+     */
+    public ArrayList<Scrabble.Regex> getValidTiles() {
+        board = new ArrayList<>();
         for (int x = 0; x < 15; x ++) {
             for (int y = 0; y < 15; y ++) {
                 String playOff = Scrabble.ui.getLetter(x, y);
@@ -22,9 +29,17 @@ public class MoveFinder {
                 }
             }
         }
-        System.out.println("Regexes: " + Scrabble.board.size());
+        System.out.println("Regexes: " + board.size());
+        return board;
     }
 
+    /**
+     * Checks for possible moves going vertically on the board.
+     * 
+     * @param x       x coordinate location on tile grid
+     * @param y       y coordinate location on tile grid
+     * @param playOff letter(s) on game board to play off of
+     */
     public void checkTop(final int x, final int y, String playOff) {
         int before = 0, after = 0;
         final String left = Scrabble.ui.getLetter(x, y - 1);
@@ -68,6 +83,13 @@ public class MoveFinder {
         }
     }
 
+    /**
+     * Checks for possible moves going horizontally on the board.
+     * 
+     * @param x       x coordinate location on tile grid
+     * @param y       y coordinate location on tile grid
+     * @param playOff letter(s) on game board to play off of
+     */
     public void checkLeft(final int x, final int y, String playOff) {
         int up = 0, down = 0;
         final String top = Scrabble.ui.getLetter(x - 1, y);
@@ -111,7 +133,7 @@ public class MoveFinder {
         }
     }
 
-    private static void addBoard(final int x, final int y, final String playOff, final int before, final int after, final boolean vert) {
+    private void addBoard(final int x, final int y, final String playOff, final int before, final int after, final boolean vert) {
         String regex = "";
         if (before < 0) {
             regex += "[a-z]*";
@@ -124,6 +146,6 @@ public class MoveFinder {
         } else if (after > 0) {
             regex += "[a-z]{0," + after + "}";
         }
-        Scrabble.board.add(new Scrabble.Regex(new Point(x, y), regex, playOff, vert));
+        board.add(new Scrabble.Regex(new Point(x, y), regex, playOff, vert));
     }
 }

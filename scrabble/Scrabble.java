@@ -20,11 +20,27 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author MehSki11zOwn
  */
 public class Scrabble {
+
+    /**
+     * String containing letters that can be played.
+     */
     public static String letters;
-    public static ArrayList<Regex> board = new ArrayList<>();
+
+    /**
+     * Map mapping each letter in the English alphabet to a specific point value.
+     */
     public static final Map<String, Integer> pointKey = new HashMap<>();
+
+    /**
+     * UI object.
+     */
     public static UI ui;
 
+    /**
+     * Main method.
+     * 
+     * @param args &lt;name of game/storage file&gt; &lt;letters currently in hand&gt;
+     */
     public static void main(final String[] args) {
         UI.storage = new File(System.getProperty("user.home") + File.separator + "ScrabbleBot" + File.separator + args[0] + ".txt");
         letters = args[1];
@@ -58,15 +74,17 @@ public class Scrabble {
         pointKey.put("y", 3);
         pointKey.put("z", 10);
         ui = new UI();
-        new MoveFinder().getValidTiles();
         getBestMove();
     }
 
+    /**
+     * Scans each possible move and loops through all the possible words that can be formed and prints highest scoring move.
+     */
     public static void getBestMove() {
         Regex reg = new Regex(null, null, null, false);
         String newWord = "";
         int highest = 0, words = 0;
-        for (final Regex regex : board) {
+        for (final Regex regex : new MoveFinder().getValidTiles()) {
             for (final String word : getWords(letters + regex.playOff)) {
                 words ++;
                 final int points = getPoints(regex, word);
@@ -81,6 +99,13 @@ public class Scrabble {
         System.out.println(reg.start + "\t" + newWord + "\t" + highest + "\t" + reg.regex);
     }
 
+    /**
+     * Returns a list of possible words that can be formed using the characters inputted.
+     * 
+     * @param chars a String containing each character to use
+     * @return      a list of possible words
+     * @see         java.util.ArrayList
+     */
     public static ArrayList<String> getWords(final String chars) {
         final ArrayList<String> words = new ArrayList<>();
         String total = "";
@@ -115,6 +140,14 @@ public class Scrabble {
         return words;
     }
 
+    /**
+     * Calculates the amount of points a specific word would yield when played in a specific position on the board.
+     * 
+     * @param r    the Regex to scan
+     * @param word the word to calculate points from
+     * @return     the amount of points the word yields
+     * @see        Regex
+     */
     public static int getPoints(final Regex r, final String word) {
         final ArrayList<Point> used = new ArrayList<>();
         final char[] usedStr = r.playOff.toCharArray();
@@ -161,11 +194,39 @@ public class Scrabble {
         return total * multiplier;
     }
 
+    /**
+     * Class containing all regex data from each move possibility.
+     */
     public static class Regex {
+
+        /**
+         * Starting point on grid for regex.
+         */
         public Point start;
-        public String regex, playOff;
+
+        /**
+         * Regex equation.
+         */
+        public String regex;
+
+        /**
+         * Letter(s) to play off of.
+         */
+        public String playOff;
+
+        /**
+         * Vertical move.
+         */
         public boolean vert;
 
+        /**
+         * Constructor
+         * 
+         * @param start   starting point on grid for regex
+         * @param regex   regex equation
+         * @param playOff letter(s) to play off of
+         * @param vert    vertical move
+         */
         public Regex(final Point start, final String regex, final String playOff, final boolean vert) {
             this.start = start;
             this.regex = regex;

@@ -25,7 +25,15 @@ import javax.swing.JPanel;
  * @author MehSki11zOwn
  */
 public class UI extends JFrame {
+
+    /**
+     * File location for game storage data.
+     */
     public static File storage;
+
+    /**
+     * Array containing each tile on the grid.
+     */
     public JButton[][] tiles = {{new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
             {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
             {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
@@ -42,6 +50,9 @@ public class UI extends JFrame {
             {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
             {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()}};
 
+    /**
+     * Constructor.
+     */
     public UI() {
         setTitle("ScrabbleBot");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -114,6 +125,13 @@ public class UI extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Returns the letter at the given (x, y) coordinate pair on the tile grid.
+     * 
+     * @param x x coordinate location on tile grid
+     * @param y y coordinate location on tile grid
+     * @return  the letter
+     */
     public final String getLetter(final int x, final int y) {
         if (x < 0 || x > 14 || y < 0 || y > 14) {
             return null;
@@ -121,6 +139,19 @@ public class UI extends JFrame {
         return tiles[y][x].getText().toLowerCase();
     }
 
+    /**
+     * Returns an ID corresponding to the tile type.
+     * <p>
+     * 0 indicates the tile is a Regular Tile<br>
+     * 1 indicates that the tile is a Double Letter Tile<br>
+     * 2 indicates that the tile is a Double Word Tile<br>
+     * 3 indicates that the tile is a Triple Letter Tile<br>
+     * 4 indicates that the tile is a Triple Word Tile<br>
+     * 
+     * @param x x coordinate location on tile grid
+     * @param y y coordinate location on tile grid
+     * @return  ID of tile type described above
+     */
     public final int getType(final int x, final int y) {
         if ((x == 0 && (y == 3 || y == 11)) || (x == 3 && (y == 0 || y == 14)) || (x == 11 && (y == 0 || y == 14)) || (x == 14 && (y == 3 || y == 11))) {
             return 4;
