@@ -1,41 +1,32 @@
 package scrabble;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+/**
+ *
+ * Main class
+ * 
+ * @author MehSki11zOwn
+ */
 public class Scrabble {
-    private static String letters;
-    private static File storage;
-    private static ArrayList<Regex> board = new ArrayList<>();
-    private static final Map<String, Integer> pointKey = new HashMap<>();
-    private static UI ui;
+    public static String letters;
+    public static ArrayList<Regex> board = new ArrayList<>();
+    public static final Map<String, Integer> pointKey = new HashMap<>();
+    public static UI ui;
 
     public static void main(final String[] args) {
-        storage = new File(System.getProperty("user.home") + File.separator + "ScrabbleBot" + File.separator + args[0] + ".txt");
+        UI.storage = new File(System.getProperty("user.home") + File.separator + "ScrabbleBot" + File.separator + args[0] + ".txt");
         letters = args[1];
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -67,11 +58,11 @@ public class Scrabble {
         pointKey.put("y", 3);
         pointKey.put("z", 10);
         ui = new UI();
-        getValidTiles();
+        new MoveFinder().getValidTiles();
         getBestMove();
     }
 
-    private static void getBestMove() {
+    public static void getBestMove() {
         Regex reg = new Regex(null, null, null, false);
         String newWord = "";
         int highest = 0, words = 0;
@@ -90,123 +81,7 @@ public class Scrabble {
         System.out.println(reg.start + "\t" + newWord + "\t" + highest + "\t" + reg.regex);
     }
 
-    private static void getValidTiles() {
-        board = new ArrayList<>();
-        for (int x = 0; x < 15; x ++) {
-            for (int y = 0; y < 15; y ++) {
-                String playOff = ui.getLetter(x, y);
-                if (!playOff.equals(" ")) {
-                    checkTop(x, y, playOff);
-                    checkLeft(x, y, playOff);
-                }
-            }
-        }
-        System.out.println("Regexes: " + board.size());
-    }
-
-    private static void checkTop(final int x, final int y, String playOff) {
-        int before = 0, after = 0;
-        final String left = ui.getLetter(x, y - 1);
-        if (left != null) {
-            for (int i = 1; i <= (y > 7 ? y : 14 - y); i ++) {
-                final String next = ui.getLetter(x, y - i);
-                if (next != null) {
-                    if (!next.equals(" ")) {
-                        return;
-                    } else {
-                        final String topLeft = ui.getLetter(x - 1, y - i), topRight = ui.getLetter(x + 1, y - i), topTop = ui.getLetter(x, y - i - 1);
-                        if ((topLeft == null || topLeft.equals(" ")) && (topRight == null || topRight.equals(" ")) && (topTop == null || topTop.equals(" "))) {
-                            before ++;
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-            final String right = ui.getLetter(x, y + 1);
-            if (right != null) {
-                for (int i = 1; i <= (y > 7 ? y : 14 - y); i ++) {
-                    final String next = ui.getLetter(x, y + i);
-                    if (next != null) {
-                        if (!next.equals(" ")) {
-                            playOff += next;
-                        } else {
-                            final String bottomLeft = ui.getLetter(x - 1, y + i), bottomRight = ui.getLetter(x + 1, y + i), bottomBottom = ui.getLetter(x, y + i + 1);
-                            if ((bottomLeft == null || bottomLeft.equals(" ")) && (bottomRight == null || bottomRight.equals(" ")) && (bottomBottom == null || bottomBottom.equals(" "))) {
-                                after ++;
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            if (before != 0 || after != 0) {
-                addBoard(x, y, playOff, before, after, true);
-            }
-        }
-    }
-
-    private static void checkLeft(final int x, final int y, String playOff) {
-        int up = 0, down = 0;
-        final String top = ui.getLetter(x - 1, y);
-        if (top != null) {
-            for (int i = 1; i <= (x > 7 ? x : 14 - x); i ++) {
-                final String next = ui.getLetter(x - i, y);
-                if (next != null) {
-                    if (!next.equals(" ")) {
-                        return;
-                    } else {
-                        final String topLeft = ui.getLetter(x - i, y - 1), bottomLeft = ui.getLetter(x - i, y + 1), leftLeft = ui.getLetter(x - i - 1, y);
-                        if ((topLeft == null || topLeft.equals(" ")) && (bottomLeft == null || bottomLeft.equals(" ")) && (leftLeft == null || leftLeft.equals(" "))) {
-                            up ++;
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-            final String bottom = ui.getLetter(x + 1, y);
-            if (bottom != null) {
-                for (int i = 1; i <= (x > 7 ? x : 14 - x); i ++) {
-                    final String next = ui.getLetter(x + i, y);
-                    if (next != null) {
-                        if (!next.equals(" ")) {
-                            playOff += next;
-                        } else {
-                            final String topRight = ui.getLetter(x + i, y - 1), bottomRight = ui.getLetter(x + i, y + 1), rightRight = ui.getLetter(x + i + 1, y);
-                            if ((topRight == null || topRight.equals(" ")) && (bottomRight == null || bottomRight.equals(" ")) && (rightRight == null || rightRight.equals(" "))) {
-                                down ++;
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            if (up != 0 || down != 0) {
-                addBoard(x, y, playOff, up, down, false);
-            }
-        }
-    }
-
-    private static void addBoard(final int x, final int y, final String playOff, final int before, final int after, final boolean vert) {
-        String regex = "";
-        if (before < 0) {
-            regex += "[a-z]*";
-        } else if (before > 0) {
-            regex += "[a-z]{0," + before + "}";
-        }
-        regex += playOff;
-        if (after < 0) {
-            regex += "[a-z]*";
-        } else if (after > 0) {
-            regex += "[a-z]{0," + after + "}";
-        }
-        board.add(new Regex(new Point(x, y), regex, playOff, vert));
-    }
-
-    private static ArrayList<String> getWords(final String chars) {
+    public static ArrayList<String> getWords(final String chars) {
         final ArrayList<String> words = new ArrayList<>();
         String total = "";
         try {
@@ -240,7 +115,7 @@ public class Scrabble {
         return words;
     }
 
-    private static int getPoints(final Regex r, final String word) {
+    public static int getPoints(final Regex r, final String word) {
         final ArrayList<Point> used = new ArrayList<>();
         final char[] usedStr = r.playOff.toCharArray();
         for (int i = 0; i < usedStr.length; i ++) {
@@ -286,126 +161,16 @@ public class Scrabble {
         return total * multiplier;
     }
 
-    private static class Regex {
-        private Point start;
-        private String regex, playOff;
-        private boolean vert;
+    public static class Regex {
+        public Point start;
+        public String regex, playOff;
+        public boolean vert;
 
         public Regex(final Point start, final String regex, final String playOff, final boolean vert) {
             this.start = start;
             this.regex = regex;
             this.playOff = playOff;
             this.vert = vert;
-        }
-    }
-
-    private static class UI extends JFrame {
-        private JButton[][] tiles = {{new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()},
-                {new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton(), new JButton()}};
-
-		public UI() {
-            setTitle("ScrabbleBot");
-            setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-            addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosing(final WindowEvent e) {
-                    String storing = "";
-                    for (int row = 0; row < tiles.length; row ++) {
-                        for (int column = 0; column < tiles[row].length; column ++) {
-                            if (!tiles[row][column].getText().equals(" ")) {
-                                storing += row + "," + column + "," + tiles[row][column].getText() + "\n";
-                            }
-                        }
-                    }
-                    try (final PrintWriter writer = new PrintWriter(storage, "UTF-8")) {
-                        writer.print(storing.trim());
-                        writer.close();
-                    } catch (final IOException ex) {
-                        System.err.println("Unable to save tiles!");
-                    }
-                    dispose();
-                }
-            });
-            setResizable(false);
-            final JPanel columnPanel = new JPanel();
-            columnPanel.setLayout(new BoxLayout(columnPanel, BoxLayout.Y_AXIS));
-            for (int row = 0; row < tiles.length; row ++) {
-                final JPanel rowPanel = new JPanel();
-                rowPanel.setLayout(new BoxLayout(rowPanel, BoxLayout.X_AXIS));
-                for (int column = 0; column < tiles[row].length; column ++) {
-                    final int rowNum = row, columnNum = column;
-                    if (getType(row, column) == 4) {
-                        tiles[row][column].setBackground(Color.yellow);
-                    } else if (getType(row, column) == 3) {
-                        tiles[row][column].setBackground(Color.green);
-                    } else if (getType(row, column) == 2) {
-                        tiles[row][column].setBackground(Color.red);
-                    } else if (getType(row, column) == 1) {
-                        tiles[row][column].setBackground(Color.blue);
-                    }
-                    tiles[row][column].setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
-                    tiles[row][column].setText(" ");
-                    tiles[row][column].setFocusable(false);
-                    tiles[row][column].addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(final ActionEvent e) {
-                            final String letter = "" + JOptionPane.showInputDialog(null, null, "Enter letter", JOptionPane.INFORMATION_MESSAGE).toUpperCase().toCharArray()[0];
-                            tiles[rowNum][columnNum].setText(letter);
-                        }
-                    });
-                    rowPanel.add(tiles[row][column]);
-                }
-                columnPanel.add(rowPanel);
-            }
-            add(columnPanel);
-            setSize(681, 552);
-            setLocation(Toolkit.getDefaultToolkit().getScreenSize().width - 681 - 3, 5);
-            if (storage.exists()) {
-                try (BufferedReader br = new BufferedReader(new FileReader(storage))) {
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        final String[] splits = line.split(",");
-                        tiles[Integer.parseInt(splits[0])][Integer.parseInt(splits[1])].setText(splits[2]);
-                    }
-                    br.close();
-                } catch (final IOException | NumberFormatException e) {
-                    System.err.println("Unable to load saved tiles!");
-                }
-            }
-            setVisible(true);
-        }
-
-        public final String getLetter(final int x, final int y) {
-            if (x < 0 || x > 14 || y < 0 || y > 14) {
-                return null;
-            }
-            return tiles[y][x].getText().toLowerCase();
-        }
-
-        public final int getType(final int x, final int y) {
-            if ((x == 0 && (y == 3 || y == 11)) || (x == 3 && (y == 0 || y == 14)) || (x == 11 && (y == 0 || y == 14)) || (x == 14 && (y == 3 || y == 11))) {
-                return 4;
-            } else if ((x == 0 && (y == 6 || y == 8)) || (x == 3 && (y == 3 || y == 11)) || (x == 5 && (y == 5 || y == 9)) || (x == 6 && (y == 0 || y == 14)) || (x == 8 && (y == 0 || y == 14)) || (x == 9 && (y == 5 || y == 9)) || (x == 11 && (y == 3 || y == 11)) || (x == 14 && (y == 6 || y == 8))) {
-                return 3;
-            } else if ((x == 1 && (y == 5 || y == 9)) || (x == 3 && y == 7) || (x == 5 && (y == 1 || y == 13)) || (x == 7 && (y == 3 || y == 11)) || (x == 9 && (y == 1 || y == 13)) || (x == 11 && y == 7) || (x == 13 && (y == 5 || y == 9))) {
-                return 2;
-            } else if ((x == 1 && (y == 2 || y == 12)) || (x == 2 && (y == 1 || y == 4 || y == 10 || y == 13)) || (x == 4 && (y == 2 || y == 6 || y == 8 || y == 12)) || (x == 6 && (y == 4 || y == 10)) || (x == 8 && (y == 4 || y == 10)) || (x == 10 && (y == 2 || y == 6 || y == 8 || y == 12)) || (x == 12 && (y == 1 || y == 4 || y == 10 || y == 13)) || (x == 13 && (y == 2 || y == 12))) {
-                return 1;
-            }
-            return 0;
         }
     }
 }
