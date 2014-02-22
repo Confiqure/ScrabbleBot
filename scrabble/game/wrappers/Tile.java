@@ -1,4 +1,4 @@
-package scrabble.wrappers;
+package scrabble.game.wrappers;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;

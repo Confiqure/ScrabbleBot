@@ -12,8 +12,8 @@ import java.util.Map;
 
 import scrabble.game.movefinder.MoveFinder;
 import scrabble.game.tiletype.TileType;
+import scrabble.game.wrappers.Regex;
 import scrabble.ui.UI;
-import scrabble.wrappers.Regex;
 
 /**
  * @author MehSki11zOwn

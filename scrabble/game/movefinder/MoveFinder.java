@@ -3,8 +3,8 @@ package scrabble.game.movefinder;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import scrabble.game.wrappers.Regex;
 import scrabble.ui.UI;
-import scrabble.wrappers.Regex;
 
 /**
  *

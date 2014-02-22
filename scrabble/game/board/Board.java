@@ -3,7 +3,7 @@ package scrabble.game.board;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import scrabble.wrappers.Tile;
+import scrabble.game.wrappers.Tile;
 
 /**
  * @author Robert G
