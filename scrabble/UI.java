@@ -146,7 +146,7 @@ public class UI extends JFrame {
      * 1 indicates that the tile is a Double Letter Tile<br>
      * 2 indicates that the tile is a Double Word Tile<br>
      * 3 indicates that the tile is a Triple Letter Tile<br>
-     * 4 indicates that the tile is a Triple Word Tile<br>
+     * 4 indicates that the tile is a Triple Word Tile
      * 
      * @param x x coordinate location on tile grid
      * @param y y coordinate location on tile grid
