@@ -99,8 +99,11 @@ public class UI extends JFrame {
                 tiles[row][column].addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-                        final String letter = "" + JOptionPane.showInputDialog(null, null, "Enter letter", JOptionPane.INFORMATION_MESSAGE).toUpperCase().toCharArray()[0];
-                        tiles[rowNum][columnNum].setText(letter);
+                        final String input = JOptionPane.showInputDialog(UI.this, null, "Enter letter", JOptionPane.INFORMATION_MESSAGE);
+                        if (input != null) {
+                            final String letter = "" + input.toUpperCase().toCharArray()[0];
+                            tiles[rowNum][columnNum].setText(letter.matches("[A-Z]") ? letter : " ");
+                        }
                     }
                 });
                 rowPanel.add(tiles[row][column]);
