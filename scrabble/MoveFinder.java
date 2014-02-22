@@ -91,7 +91,7 @@ public class MoveFinder {
      * @param playOff letter(s) on game board to play off of
      */
     public void checkLeft(final int x, final int y, String playOff) {
-        int up = 0, down = 0;
+        int left = 0, right = 0;
         final String top = Scrabble.ui.getLetter(x - 1, y);
         if (top != null) {
             for (int i = 1; i <= (x > 7 ? x : 14 - x); i ++) {
@@ -102,7 +102,7 @@ public class MoveFinder {
                     } else {
                         final String topLeft = Scrabble.ui.getLetter(x - i, y - 1), bottomLeft = Scrabble.ui.getLetter(x - i, y + 1), leftLeft = Scrabble.ui.getLetter(x - i - 1, y);
                         if ((topLeft == null || topLeft.equals(" ")) && (bottomLeft == null || bottomLeft.equals(" ")) && (leftLeft == null || leftLeft.equals(" "))) {
-                            up ++;
+                            left ++;
                         } else {
                             break;
                         }
@@ -119,7 +119,7 @@ public class MoveFinder {
                         } else {
                             final String topRight = Scrabble.ui.getLetter(x + i, y - 1), bottomRight = Scrabble.ui.getLetter(x + i, y + 1), rightRight = Scrabble.ui.getLetter(x + i + 1, y);
                             if ((topRight == null || topRight.equals(" ")) && (bottomRight == null || bottomRight.equals(" ")) && (rightRight == null || rightRight.equals(" "))) {
-                                down ++;
+                                right ++;
                             } else {
                                 break;
                             }
@@ -127,8 +127,8 @@ public class MoveFinder {
                     }
                 }
             }
-            if (up != 0 || down != 0) {
-                addBoard(x, y, playOff, up, down, false);
+            if (left != 0 || right != 0) {
+                addBoard(x, y, playOff, left, right, false);
             }
         }
     }

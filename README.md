@@ -6,8 +6,8 @@ ScrabbleBot is an ongoing project open to the community started by MehSki11zOwn.
 The current configuration of the script is made to play *Words With Friends*, a Scrabble spin-off commonly played via Facebook.
 
 To run:
-Compile the source files and run via:
-java Scrabble <game name> <letters you have>
+Download the compiled JAR file and run via:
+java -jar Scrabble.jar <game name> <letters you have>
 It will boot up a moment later with a tiled UI. Simply click on any tile to enter the letter that goes there. **NOTE:** If NO letter goes in a space, please enter the space character (" ") in the tile - do NOT leave it blank! All tiles are created with spaces by default.
 
 The current script will form the highest scoring move on the board, but with a few exceptions:
