@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -27,6 +28,7 @@ public class UI extends JFrame {
 	private final JMenuItem item = new JMenuItem("Change tiles in hand");
 	private final File storageDirectory = new File(System.getProperty("user.home") + File.separator + "ScrabbleBot" + File.separator);
 	private final Board board = new Board();
+	private final Game game = new Game(this);
 
 	private String fileName;
 	private String letters;
@@ -73,17 +75,13 @@ public class UI extends JFrame {
 		new Thread() {
 			@Override
 			public void run() {
-				new Game(getUI()).getBestMove(letters);
+				game.getBestMove(letters);
 			}
 		}.start();
 	}
 	
 	public Board getBoard() {
 		return board;
-	}
-
-	public UI getUI() {
-		return this;
 	}
 	
 	private void requestLettersInHand() {
@@ -92,6 +90,10 @@ public class UI extends JFrame {
 		do {
 			letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
 		} while (letters == null || letters.equals(last) || letters.equals("null"));
+		if (!Pattern.matches("[a-zA-Z]+", letters)) {
+			JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
+			requestLettersInHand();
+		}
 	}
 
 	private void processEvent() {

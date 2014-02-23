@@ -1,7 +1,6 @@
 package scrabble.game.wrappers;
 
 import java.awt.Font;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
@@ -29,12 +28,7 @@ public class Tile extends JButton {
 		addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				String letter = null;
-				try {
-					letter = JOptionPane.showInputDialog("Enter letter", JOptionPane.QUESTION_MESSAGE).substring(0, 1).toUpperCase();
-				} catch (HeadlessException e1) {
-					return;
-				}
+				final String letter = JOptionPane.showInputDialog("Enter letter", JOptionPane.QUESTION_MESSAGE).substring(0, 1).toUpperCase();
 				if (letter != null && Pattern.matches("[a-zA-Z]+", letter)) {
 					setText(letter);
 				} else {

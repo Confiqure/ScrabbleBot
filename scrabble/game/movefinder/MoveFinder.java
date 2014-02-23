@@ -139,7 +139,7 @@ public class MoveFinder {
 	}
 
 	/**
-	 * Tests for different possible move combinations and builds an ArrayList containing them all. Returns an ArrayList containing Scrabble.Regex entries.
+	 * Tests for different possible move combinations and builds an ArrayList containing them all. Returns an ArrayList containing Regex entries.
 	 *
 	 * @return a list of possible moves
 	 * @see    java.util.ArrayList
