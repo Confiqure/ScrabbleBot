@@ -2,6 +2,8 @@ package scrabble.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.regex.Pattern;
 
@@ -80,11 +82,7 @@ public class UI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == saveGame) {
-			        final int returnVal = fileChooser.showDialog(UI.this, "Save");
-			        if (returnVal == JFileChooser.APPROVE_OPTION) {
-			            final File file = fileChooser.getSelectedFile();
-			            IO.saveTiles(board, file);
-			        }
+					saveGame();
 			   } 
 			}
 			
@@ -93,10 +91,24 @@ public class UI extends JFrame {
 		menuBar.add(file);
 		setJMenuBar(menuBar);
 		add(board);
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				saveGame();
+			}
+		});
 		pack();
 		setLocationRelativeTo(getOwner());
 		setResizable(false);
 		setVisible(true);
+	}
+	
+	private void saveGame() {
+		final int returnVal = fileChooser.showDialog(UI.this, "Save");
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            final File file = fileChooser.getSelectedFile();
+            IO.saveTiles(board, file);
+        }
 	}
 
 	private void getBestMove() {
