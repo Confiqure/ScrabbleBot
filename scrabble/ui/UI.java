@@ -39,9 +39,7 @@ public class UI extends JFrame {
 		do {
 			fileName = JOptionPane.showInputDialog("Enter name of game/storage file.") + ".txt";
 		} while (fileName == null || fileName.equalsIgnoreCase("null.txt") || fileName.isEmpty());
-		do {
-			letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
-		} while (letters == null || letters.equalsIgnoreCase("null") || letters.isEmpty());
+		requestLettersInHand();
 		setTitle("ScrabbleBot");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		menuBar.add(menu);
@@ -87,9 +85,17 @@ public class UI extends JFrame {
 	public UI getUI() {
 		return this;
 	}
+	
+	private void requestLettersInHand() {
+		String last = "";
+		last += letters;
+		do {
+			letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
+		} while (letters == null || letters.equals(last) || letters.equals("null"));
+	}
 
 	private void processEvent() {
-		letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
+		requestLettersInHand();
 		getBestMove();
 	}
 
