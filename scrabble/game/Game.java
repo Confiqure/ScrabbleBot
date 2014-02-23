@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import scrabble.game.board.Board;
 import scrabble.game.movefinder.MoveFinder;
 import scrabble.game.tiletype.TileType;
 import scrabble.game.wrappers.Regex;
-import scrabble.ui.UI;
 
 /**
  * @author MehSki11zOwn
@@ -25,10 +25,15 @@ public class Game {
 	 * Map mapping each letter in the English alphabet to a specific point value.
 	 */
 	private final Map<String, Integer> pointKey = new HashMap<>();
-	private final UI ui;
+	/**
+	 * Board the board displayed by this user interface.
+	 */
+	private final Board board = new Board();
 
-	public Game(UI ui) {
-		this.ui = ui;
+	/**
+	 * Constructs a new game.
+	 */
+	public Game() {
 		pointKey.put("a", 1);
 		pointKey.put("b", 4);
 		pointKey.put("c", 4);
@@ -64,7 +69,7 @@ public class Game {
 		Regex reg = new Regex(null, null, null, false);
 		String newWord = "";
 		int highest = 0, words = 0;
-		for (final Regex regex : new MoveFinder(ui).getValidTiles()) {
+		for (final Regex regex : new MoveFinder(board).getValidTiles()) {
 			for (final String word : getWords(tilesInHand + regex.playOff)) {
 				words ++;
 				final int points = getPoints(regex, word);
@@ -77,6 +82,14 @@ public class Game {
 		}
 		System.out.println("Scanned " + words + " words");
 		System.out.println(reg.start + "\t" + newWord + "\t" + highest + "\t" + reg.regex);
+	}
+
+	/**
+	 * 
+	 * @return board.
+	 */
+	public Board getBoard() {
+		return this.board;
 	}
 
 	/**

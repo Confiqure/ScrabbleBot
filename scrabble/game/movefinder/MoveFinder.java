@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import scrabble.game.board.Board;
 import scrabble.game.wrappers.Regex;
-import scrabble.ui.UI;
 
 /**
  *
@@ -18,8 +17,8 @@ public class MoveFinder {
 	private ArrayList<Regex> board = new ArrayList<>();
 	private final Board b;
 
-	public MoveFinder(UI ui) {
-		this.b = ui.getBoard();
+	public MoveFinder(Board b) {
+		this.b = b;
 	}
 
 	private void addBoard(final int x, final int y, final String playOff, final int before, final int after, final boolean vert) {
