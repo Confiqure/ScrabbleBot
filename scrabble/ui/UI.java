@@ -27,22 +27,21 @@ public class UI extends JFrame {
 	private final JMenuItem item = new JMenuItem("Change tiles in hand");
 	private final File storageDirectory = new File(System.getProperty("user.home") + File.separator + "ScrabbleBot" + File.separator);
 	private final Board board = new Board();
-	private final String fileName;
-	private String letters;
 
-	private void processEvent() {
-		letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
-		getBestMove();
-	}
+	private String fileName;
+	private String letters;
 
 	public UI() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ignored) {
-
 		}
-		fileName = JOptionPane.showInputDialog("Enter name of game/storage file.") + ".txt";
-		letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
+		do {
+			fileName = JOptionPane.showInputDialog("Enter name of game/storage file.") + ".txt";
+		} while (fileName == null || fileName.equalsIgnoreCase("null.txt") || fileName.isEmpty());
+		do {
+			letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
+		} while (letters == null || letters.equalsIgnoreCase("null") || letters.isEmpty());
 		setTitle("ScrabbleBot");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		menuBar.add(menu);
@@ -72,10 +71,6 @@ public class UI extends JFrame {
 		getBestMove();
 	}
 
-	public UI getUI() {
-		return this;
-	}
-
 	private void getBestMove() {
 		new Thread() {
 			@Override
@@ -84,19 +79,18 @@ public class UI extends JFrame {
 			}
 		}.start();
 	}
+	
+	public Board getBoard() {
+		return board;
+	}
 
-	/**
-	 * Returns the letter at the given (x, y) coordinate pair on the tile grid.
-	 * 
-	 * @param x x coordinate location on tile grid
-	 * @param y y coordinate location on tile grid
-	 * @return  the letter
-	 */
-	public final String getLetter(final int x, final int y) {
-		if (x < 0 || x > 14 || y < 0 || y > 14) {
-			return null;
-		}
-		return board.getTiles()[y][x].getText().toLowerCase();
+	public UI getUI() {
+		return this;
+	}
+
+	private void processEvent() {
+		letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
+		getBestMove();
 	}
 
 }

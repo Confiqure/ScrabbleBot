@@ -80,47 +80,6 @@ public class Game {
 	}
 
 	/**
-	 * Returns a list of possible words that can be formed using the characters inputted.
-	 * 
-	 * @param chars a String containing each character to use
-	 * @return      a list of possible words
-	 * @see         java.util.ArrayList
-	 */
-	public ArrayList<String> getWords(final String chars) {
-		final ArrayList<String> words = new ArrayList<>();
-		String total = "";
-		try {
-			final URLConnection spoof = new URL("http://wordfinder.yourdictionary.com/unscramble/" + chars + "?remember_tiles=false").openConnection();
-			spoof.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0;    H010818)");
-			try (final BufferedReader in = new BufferedReader(new InputStreamReader(spoof.getInputStream()))) {
-				String str;
-				while ((str = in.readLine()) != null) {
-					total += str;
-				}
-				in.close();
-			}
-		} catch (final IOException ex) {}
-		total = total.substring(total.indexOf("<hr>") + 4, total.indexOf("</section>", total.indexOf("<hr>")));
-		for (final String table : total.split("<a name=\"[0-9]\">")) {
-			if (!table.startsWith("</a>")) {
-				continue;
-			}
-			for (final String line : table.split("<a href=")) {
-				if (!line.startsWith("'http://www.yourdictionary.com/")) {
-					continue;
-				}
-				for (final String row : line.split("<tr>")) {
-					if (row.equals("<td>")) {
-						continue;
-					}
-					words.add(row.substring(row.indexOf(">") + 1, row.startsWith("<td>") ? row.indexOf("</td>") : row.indexOf("</a>")));
-				}
-			}
-		}
-		return words;
-	}
-
-	/**
 	 * Calculates the amount of points a specific word would yield when played in a specific position on the board.
 	 * 
 	 * @param r    the Regex to scan
@@ -173,6 +132,47 @@ public class Game {
 			}
 		}
 		return total * multiplier;
+	}
+
+	/**
+	 * Returns a list of possible words that can be formed using the characters inputted.
+	 * 
+	 * @param chars a String containing each character to use
+	 * @return      a list of possible words
+	 * @see         java.util.ArrayList
+	 */
+	public ArrayList<String> getWords(final String chars) {
+		final ArrayList<String> words = new ArrayList<>();
+		String total = "";
+		try {
+			final URLConnection spoof = new URL("http://wordfinder.yourdictionary.com/unscramble/" + chars + "?remember_tiles=false").openConnection();
+			spoof.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0;    H010818)");
+			try (final BufferedReader in = new BufferedReader(new InputStreamReader(spoof.getInputStream()))) {
+				String str;
+				while ((str = in.readLine()) != null) {
+					total += str;
+				}
+				in.close();
+			}
+		} catch (final IOException ex) {}
+		total = total.substring(total.indexOf("<hr>") + 4, total.indexOf("</section>", total.indexOf("<hr>")));
+		for (final String table : total.split("<a name=\"[0-9]\">")) {
+			if (!table.startsWith("</a>")) {
+				continue;
+			}
+			for (final String line : table.split("<a href=")) {
+				if (!line.startsWith("'http://www.yourdictionary.com/")) {
+					continue;
+				}
+				for (final String row : line.split("<tr>")) {
+					if (row.equals("<td>")) {
+						continue;
+					}
+					words.add(row.substring(row.indexOf(">") + 1, row.startsWith("<td>") ? row.indexOf("</td>") : row.indexOf("</a>")));
+				}
+			}
+		}
+		return words;
 	}
 
 }
