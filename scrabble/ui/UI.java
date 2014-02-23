@@ -125,12 +125,10 @@ public class UI extends JFrame {
 	}
 	
 	private void requestLettersInHand() {
-		String last = "";
-		last += letters;
 		do {
 			letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
-		} while (letters == null || letters.equals(last) || letters.equals("null"));
-		if (!Pattern.matches("[a-zA-Z]+", letters)) {
+		} while (letters == null);
+		if (letters.equals("null") || !Pattern.matches("[a-zA-Z]+", letters)) {
 			JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
 			requestLettersInHand();
 		}
