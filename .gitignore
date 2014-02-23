@@ -1,10 +1,2 @@
-*.classpath
-*.gitignore
-*.project
-*.class
 *.bat
-*.jar
-*.log
-/bin
-
-/.settings
+*.txt
