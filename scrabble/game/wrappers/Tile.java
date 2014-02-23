@@ -8,8 +8,10 @@ import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import scrabble.game.tiletype.TileType;
+import scrabble.ui.charlimitdocument.CharLimitDocument;
 
 /**
  * @author Robert G
@@ -31,14 +33,18 @@ public class Tile extends JButton {
 		addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				String letter = null;
-				try {
-					letter = JOptionPane.showInputDialog(null, "Enter a letter").substring(0, 1).toUpperCase();
-				} catch (Exception e1) {}
-				if (letter != null && Pattern.matches("[a-zA-Z]+", letter)) {
-					setText(letter);
-				} else {
-					JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
+				final String curText = getText();
+				final JTextField input = new JTextField(new CharLimitDocument(1), (curText.equals(" ") ? "" : curText), 1);
+				final Object[] info = { "Enter a letter.", input };
+				final int returnVal = JOptionPane.showConfirmDialog(null, info, "Input!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+				if (returnVal == JOptionPane.OK_OPTION) {
+					final String enteredVal = input.getText().toUpperCase();
+					if (enteredVal.equals(" ") || Pattern.matches("[a-zA-Z]+", enteredVal)) {
+						 setText(enteredVal);
+					} else {
+						JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
+						actionPerformed(e);
+					}
 				}
 			}
 		});

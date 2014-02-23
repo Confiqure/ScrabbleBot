@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import scrabble.game.board.Board;
+import scrabble.game.scrabbleboard.ScrabbleBoard;
 
 /**
  * @author Robert G
@@ -20,15 +20,15 @@ public class IO {
 	 * @param directory
 	 * @param fileName
 	 */
-	public static void loadTiles(Board board, File file) {
-		if (file.exists()) {
+	public static void loadTiles(ScrabbleBoard board, File file) {
+		if (file.exists() && file.getName().contains(".game")) {
 			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 				String line;
 				while ((line = br.readLine()) != null) {
 					final String[] splits = line.split(", ");
 					for (String inf : splits) {
 						final String[] vars = inf.split("#");
-						board.setTile(Integer.parseInt(vars[0]), Integer.parseInt(vars[1]), vars[2]);
+						board.setLetterAtTile(Integer.parseInt(vars[0]), Integer.parseInt(vars[1]), vars[2]);
 					}
 				}
 				br.close();
@@ -44,14 +44,16 @@ public class IO {
 	 * @param file
 	 * @param fileName
 	 */
-	public static void saveTiles(Board board, File file) {
-		if (!file.isDirectory()) {
-			file.mkdirs();
-		}
-		try (final FileWriter writer = new FileWriter(file)) {
-			for (int row = 0; row < board.getTiles().length; row ++) {
-				for (int column = 0; column < board.getTiles()[row].length; column ++) {
-					final String letter = board.getLetter(row, column);
+	public static void saveTiles(ScrabbleBoard board, File file) {
+		try {
+			if (!file.exists()) {
+        		file = new File(file.getParentFile(), (file.getName() + ".game"));
+        		file.createNewFile();
+        	}
+			final FileWriter writer = new FileWriter(file);
+			for (int row = 0; row < board.getAllTiles().length; row ++) {
+				for (int column = 0; column < board.getAllTiles()[row].length; column ++) {
+					final String letter = board.getLetterAt(row, column);
 					if (letter != null && !letter.equals(" ")) {
 						writer.write(row + "#" + column + "#" + letter + ", ");
 					}

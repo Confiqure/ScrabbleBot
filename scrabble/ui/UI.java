@@ -13,10 +13,13 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import scrabble.game.Game;
+import scrabble.ui.charlimitdocument.CharLimitDocument;
 import scrabble.util.IO;
 
 public class UI extends JFrame {
@@ -62,6 +65,11 @@ public class UI extends JFrame {
 	 */
 	private final JFileChooser fileChooser = new JFileChooser();
 	/**
+	 * FileNameExtensionFilter the fileExtensionFilter for the fileChooser.
+	 * Used to make sure a user doesn't try to load a non .game file.
+	 */
+	private final FileNameExtensionFilter fileExtensionFilter = new FileNameExtensionFilter("saved .game files", "game");
+	/**
 	 * Game the game.
 	 */
 	private final Game game = new Game();
@@ -98,6 +106,10 @@ public class UI extends JFrame {
 		});
 		options.add(tilesInHand);
 		menuBar.add(options);
+		fileChooser.setFileHidingEnabled(true);
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fileChooser.setFileFilter(fileExtensionFilter);
+		fileChooser.setAcceptAllFileFilterUsed(false);
 		loadGame.addActionListener(new ActionListener() {
 
 			@Override
@@ -106,7 +118,9 @@ public class UI extends JFrame {
 			        final int returnVal = fileChooser.showDialog(UI.this, "Load");
 			        if (returnVal == JFileChooser.APPROVE_OPTION) {
 			            final File file = fileChooser.getSelectedFile();
-			            IO.loadTiles(game.getBoard(), file);
+			            if (fileChooser.accept(file)) {
+			            	IO.loadTiles(game.getBoard(), file);
+			            }
 			        }
 			   } 
 			}
@@ -118,7 +132,11 @@ public class UI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == saveGame) {
-					saveGame();
+					if (game.getBoard().hasValidContent()) {
+						saveGame();
+					} else {
+						JOptionPane.showMessageDialog(null, "There is nothing to save!", "Warning!", JOptionPane.WARNING_MESSAGE);
+					}
 			   } 
 			}
 			
@@ -130,7 +148,9 @@ public class UI extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				saveGame();
+				if (game.getBoard().hasValidContent()) {
+					saveGame();
+				}
 			}
 		});
 		pack();
@@ -143,10 +163,9 @@ public class UI extends JFrame {
 	 * Opens a dialogue and prompts the user to select a file to save the current game to.
 	 */
 	private void saveGame() {
-		final int returnVal = fileChooser.showDialog(UI.this, "Save");
+		final int returnVal = fileChooser.showDialog(this, "Save");
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            final File file = fileChooser.getSelectedFile();
-            IO.saveTiles(game.getBoard(), file);
+            IO.saveTiles(game.getBoard(), fileChooser.getSelectedFile());
         }
 	}
 
@@ -166,12 +185,17 @@ public class UI extends JFrame {
 	 * Displays an input dialogue prompting the user to enter the letters they currently have in hand.
 	 */
 	private void requestLettersInHand() {
-		do {
-			letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
-		} while (letters == null);
-		if (letters.equals("null") || !Pattern.matches("[a-zA-Z]+", letters)) {
-			JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
-			requestLettersInHand();
+		final JTextField input = new JTextField(new CharLimitDocument(7), letters, 7);
+		final Object[] info = { "Enter tiles currently in hand.", input	};
+		final int returnVal = JOptionPane.showConfirmDialog(this, info, "Input!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+		if (returnVal == JOptionPane.OK_OPTION) {
+			final String enteredVal = input.getText().toUpperCase();
+			if (Pattern.matches("[a-zA-Z]+", enteredVal)) {
+				letters = enteredVal;
+			} else {
+				JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
+				requestLettersInHand();
+			}
 		}
 	}
 

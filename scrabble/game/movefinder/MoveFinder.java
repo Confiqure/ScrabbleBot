@@ -3,7 +3,7 @@ package scrabble.game.movefinder;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import scrabble.game.board.Board;
+import scrabble.game.scrabbleboard.ScrabbleBoard;
 import scrabble.game.wrappers.Regex;
 
 /**
@@ -15,9 +15,9 @@ import scrabble.game.wrappers.Regex;
 public class MoveFinder {
 
 	private ArrayList<Regex> tiles = new ArrayList<>();
-	private final Board board;
+	private final ScrabbleBoard board;
 
-	public MoveFinder(Board b) {
+	public MoveFinder(ScrabbleBoard b) {
 		this.board = b;
 	}
 
@@ -46,15 +46,15 @@ public class MoveFinder {
 	 */
 	public void checkLeft(final int x, final int y, String playOff) {
 		int up = 0, down = 0;
-		final String top = board.getLetter(x - 1, y);
+		final String top = board.getLetterAt(x - 1, y);
 		if (top != null) {
 			for (int i = 1; i <= (x > 7 ? x : 14 - x); i ++) {
-				final String next = board.getLetter(x - i, y);
+				final String next = board.getLetterAt(x - i, y);
 				if (next != null) {
 					if (!next.equals(" ")) {
 						return;
 					} else {
-						final String topLeft = board.getLetter(x - i, y - 1), bottomLeft = board.getLetter(x - i, y + 1), leftLeft = board.getLetter(x - i - 1, y);
+						final String topLeft = board.getLetterAt(x - i, y - 1), bottomLeft = board.getLetterAt(x - i, y + 1), leftLeft = board.getLetterAt(x - i - 1, y);
 						if ((topLeft == null || topLeft.equals(" ")) && (bottomLeft == null || bottomLeft.equals(" ")) && (leftLeft == null || leftLeft.equals(" "))) {
 							up ++;
 						} else {
@@ -63,15 +63,15 @@ public class MoveFinder {
 					}
 				}
 			}
-			final String bottom = board.getLetter(x + 1, y);
+			final String bottom = board.getLetterAt(x + 1, y);
 			if (bottom != null) {
 				for (int i = 1; i <= (x > 7 ? x : 14 - x); i ++) {
-					final String next = board.getLetter(x + i, y);
+					final String next = board.getLetterAt(x + i, y);
 					if (next != null) {
 						if (!next.equals(" ")) {
 							playOff += next;
 						} else {
-							final String topRight = board.getLetter(x + i, y - 1), bottomRight = board.getLetter(x + i, y + 1), rightRight = board.getLetter(x + i + 1, y);
+							final String topRight = board.getLetterAt(x + i, y - 1), bottomRight = board.getLetterAt(x + i, y + 1), rightRight = board.getLetterAt(x + i + 1, y);
 							if ((topRight == null || topRight.equals(" ")) && (bottomRight == null || bottomRight.equals(" ")) && (rightRight == null || rightRight.equals(" "))) {
 								down ++;
 							} else {
@@ -96,15 +96,15 @@ public class MoveFinder {
 	 */
 	public void checkTop(final int x, final int y, String playOff) {
 		int before = 0, after = 0;
-		final String left = board.getLetter(x, y - 1);
+		final String left = board.getLetterAt(x, y - 1);
 		if (left != null) {
 			for (int i = 1; i <= (y > 7 ? y : 14 - y); i ++) {
-				final String next = board.getLetter(x, y - i);
+				final String next = board.getLetterAt(x, y - i);
 				if (next != null) {
 					if (!next.equals(" ")) {
 						return;
 					} else {
-						final String topLeft = board.getLetter(x - 1, y - i), topRight = board.getLetter(x + 1, y - i), topTop = board.getLetter(x, y - i - 1);
+						final String topLeft = board.getLetterAt(x - 1, y - i), topRight = board.getLetterAt(x + 1, y - i), topTop = board.getLetterAt(x, y - i - 1);
 						if ((topLeft == null || topLeft.equals(" ")) && (topRight == null || topRight.equals(" ")) && (topTop == null || topTop.equals(" "))) {
 							before ++;
 						} else {
@@ -113,15 +113,15 @@ public class MoveFinder {
 					}
 				}
 			}
-			final String right = board.getLetter(x, y + 1);
+			final String right = board.getLetterAt(x, y + 1);
 			if (right != null) {
 				for (int i = 1; i <= (y > 7 ? y : 14 - y); i ++) {
-					final String next = board.getLetter(x, y + i);
+					final String next = board.getLetterAt(x, y + i);
 					if (next != null) {
 						if (!next.equals(" ")) {
 							playOff += next;
 						} else {
-							final String bottomLeft = board.getLetter(x - 1, y + i), bottomRight = board.getLetter(x + 1, y + i), bottomBottom = board.getLetter(x, y + i + 1);
+							final String bottomLeft = board.getLetterAt(x - 1, y + i), bottomRight = board.getLetterAt(x + 1, y + i), bottomBottom = board.getLetterAt(x, y + i + 1);
 							if ((bottomLeft == null || bottomLeft.equals(" ")) && (bottomRight == null || bottomRight.equals(" ")) && (bottomBottom == null || bottomBottom.equals(" "))) {
 								after ++;
 							} else {
@@ -147,7 +147,7 @@ public class MoveFinder {
 		tiles = new ArrayList<>();
 		for (int x = 0; x < 15; x ++) {
 			for (int y = 0; y < 15; y ++) {
-				String playOff = board.getLetter(x, y);
+				String playOff = board.getLetterAt(x, y);
 				if (!playOff.equals(" ")) {
 					checkTop(x, y, playOff);
 					checkLeft(x, y, playOff);

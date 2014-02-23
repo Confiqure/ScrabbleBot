@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import scrabble.game.board.Board;
 import scrabble.game.movefinder.MoveFinder;
+import scrabble.game.scrabbleboard.ScrabbleBoard;
 import scrabble.game.tiletype.TileType;
 import scrabble.game.wrappers.Regex;
 
@@ -25,10 +25,16 @@ public class Game {
 	 * Map mapping each letter in the English alphabet to a specific point value.
 	 */
 	private final Map<String, Integer> pointKey = new HashMap<>();
+	
 	/**
-	 * Board the board displayed by this user interface.
+	 * ScrabbleBoard the board displayed by the user interface.
 	 */
-	private final Board board = new Board();
+	private final ScrabbleBoard board = new ScrabbleBoard();
+	
+	/**
+	 * 
+	 */
+	private final MoveFinder moveFinder = new MoveFinder(board);
 
 	/**
 	 * Constructs a new game.
@@ -66,10 +72,13 @@ public class Game {
 	 * Scans each possible move and loops through all the possible words that can be formed and prints highest scoring move.
 	 */
 	public void getBestMove(String tilesInHand) {
+		if (!board.hasValidContent()) {
+			return;
+		}
 		Regex reg = new Regex(null, null, null, false);
 		String newWord = "";
 		int highest = 0, words = 0;
-		for (final Regex regex : new MoveFinder(board).getValidTiles()) {
+		for (final Regex regex : moveFinder.getValidTiles()) {
 			for (final String word : getWords(tilesInHand + regex.playOff)) {
 				words ++;
 				final int points = getPoints(regex, word);
@@ -88,7 +97,7 @@ public class Game {
 	 * 
 	 * @return board.
 	 */
-	public Board getBoard() {
+	public ScrabbleBoard getBoard() {
 		return this.board;
 	}
 
