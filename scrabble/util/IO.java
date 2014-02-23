@@ -20,8 +20,7 @@ public class IO {
 	 * @param directory
 	 * @param fileName
 	 */
-	public static void loadTiles(Board board, File directory, String fileName) {
-		final File file = new File(directory, fileName);
+	public static void loadTiles(Board board, File file) {
 		if (file.exists()) {
 			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 				String line;
@@ -45,12 +44,11 @@ public class IO {
 	 * @param file
 	 * @param fileName
 	 */
-	public static void saveTiles(Board board, File file, String fileName) {
+	public static void saveTiles(Board board, File file) {
 		if (!file.isDirectory()) {
 			file.mkdirs();
 		}
-		final File saveFile = new File(file, fileName);
-		try (final FileWriter writer = new FileWriter(saveFile)) {
+		try (final FileWriter writer = new FileWriter(file)) {
 			for (int row = 0; row < board.getTiles().length; row ++) {
 				for (int column = 0; column < board.getTiles()[row].length; column ++) {
 					final String letter = board.getLetter(row, column);

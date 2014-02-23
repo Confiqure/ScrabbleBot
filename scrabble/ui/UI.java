@@ -2,11 +2,10 @@ package scrabble.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.regex.Pattern;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -24,29 +23,34 @@ public class UI extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private final JMenuBar menuBar = new JMenuBar();
-	private final JMenu menu = new JMenu("Options");
-	private final JMenuItem item = new JMenuItem("Change tiles in hand");
-	private final File storageDirectory = new File(System.getProperty("user.home") + File.separator + "ScrabbleBot" + File.separator);
+	private final JMenu options = new JMenu("Options");
+	private final JMenuItem bestMove = new JMenuItem("Get best move");
+	private final JMenuItem tilesInHand = new JMenuItem("Change tiles in hand");
+	private final JMenu file = new JMenu("File");
+	private final JMenuItem loadGame = new JMenuItem("Load game");
+	private final JMenuItem saveGame = new JMenuItem("Save game");
+	private final JFileChooser fileChooser = new JFileChooser();
 	private final Board board = new Board();
 	private final Game game = new Game(this);
 
-	private String fileName;
 	private String letters;
 
 	public UI() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ignored) {
-		}
-		do {
-			fileName = JOptionPane.showInputDialog("Enter name of game/storage file.") + ".txt";
-		} while (fileName == null || fileName.equalsIgnoreCase("null.txt") || fileName.isEmpty());
-		requestLettersInHand();
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ignored) {}
 		setTitle("ScrabbleBot");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		menuBar.add(menu);
-		menu.add(item);
-		item.addActionListener(new ActionListener() {
+		bestMove.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getBestMove();
+			}
+			
+		});
+		options.add(bestMove);
+		tilesInHand.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -54,21 +58,45 @@ public class UI extends JFrame {
 			}
 
 		});
-		setJMenuBar(menuBar);
-		IO.loadTiles(board, storageDirectory, fileName);
-		add(board);
-		addWindowListener(new WindowAdapter() {
+		options.add(tilesInHand);
+		menuBar.add(options);
+		loadGame.addActionListener(new ActionListener() {
+
 			@Override
-			public void windowClosing(final WindowEvent e) {
-				IO.saveTiles(board, storageDirectory, fileName);
-				dispose();
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == loadGame) {
+			        final int returnVal = fileChooser.showDialog(UI.this, "Load");
+			        if (returnVal == JFileChooser.APPROVE_OPTION) {
+			            final File file = fileChooser.getSelectedFile();
+			            IO.loadTiles(board, file);
+			        }
+			   } 
 			}
+			
 		});
+		file.add(loadGame);
+		saveGame.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == saveGame) {
+			        final int returnVal = fileChooser.showDialog(UI.this, "Save");
+			        if (returnVal == JFileChooser.APPROVE_OPTION) {
+			            final File file = fileChooser.getSelectedFile();
+			            IO.saveTiles(board, file);
+			        }
+			   } 
+			}
+			
+		});
+		file.add(saveGame);
+		menuBar.add(file);
+		setJMenuBar(menuBar);
+		add(board);
 		pack();
 		setLocationRelativeTo(getOwner());
 		setResizable(false);
 		setVisible(true);
-		getBestMove();
 	}
 
 	private void getBestMove() {

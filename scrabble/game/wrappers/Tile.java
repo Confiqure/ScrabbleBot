@@ -28,7 +28,10 @@ public class Tile extends JButton {
 		addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				final String letter = JOptionPane.showInputDialog("Enter letter", JOptionPane.QUESTION_MESSAGE).substring(0, 1).toUpperCase();
+				String letter = null;
+				try {
+					letter = JOptionPane.showInputDialog(null, "Enter a letter").substring(0, 1).toUpperCase();
+				} catch (Exception e1) {}
 				if (letter != null && Pattern.matches("[a-zA-Z]+", letter)) {
 					setText(letter);
 				} else {
