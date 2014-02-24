@@ -109,7 +109,7 @@ public class Board extends JPanel {
     public void setTile(final int x, final int y, final String letter) {
         final Tile t = getTile(x, y);
         if (t != null) {
-            t.setText(letter);
+            t.setText(letter.toUpperCase());
         }
     }
 

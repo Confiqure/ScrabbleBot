@@ -46,9 +46,6 @@ public class IO {
      * @param file  the file path
      */
     public static void saveTiles(final Board board, final File file) {
-        if (!file.isDirectory()) {
-            file.mkdirs();
-        }
         try (final FileWriter writer = new FileWriter(file)) {
             for (int row = 0; row < board.getTiles().length; row ++) {
                 for (int column = 0; column < board.getTiles()[row].length; column ++) {

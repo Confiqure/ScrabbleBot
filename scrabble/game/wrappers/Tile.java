@@ -43,7 +43,12 @@ public class Tile extends JButton {
                 try {
                     letter = JOptionPane.showInputDialog(null, "Enter a letter").substring(0, 1).toUpperCase();
                 } catch (final HeadlessException ex) {}
-                if (letter != null && Pattern.matches("[a-zA-Z]+", letter)) {
+                if (letter == null) {
+                    return;
+                }
+                if (letter.isEmpty() || letter.equals(" ")) {
+                    setText(" ");
+                } else if (Pattern.matches("[a-zA-Z]+", letter)) {
                     setText(letter);
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
