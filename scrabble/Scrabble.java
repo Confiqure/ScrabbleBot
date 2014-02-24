@@ -13,6 +13,9 @@ import scrabble.ui.UI;
  */
 public class Scrabble {
 
+    /**
+     * Global variable for the User Interface.
+     */
     public static UI ui;
 
     /**

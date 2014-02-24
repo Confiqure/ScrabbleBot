@@ -41,7 +41,7 @@ public class Tile extends JButton {
             public void actionPerformed(final ActionEvent e) {
                 String letter = null;
                 try {
-                    letter = JOptionPane.showInputDialog(null, "Enter a letter").substring(0, 1).toUpperCase();
+                    letter = JOptionPane.showInputDialog(scrabble.Scrabble.ui, "Enter a letter").substring(0, 1).toUpperCase();
                 } catch (final HeadlessException ex) {}
                 if (letter == null) {
                     return;
@@ -53,7 +53,7 @@ public class Tile extends JButton {
                     setText(letter);
                     scrabble.Scrabble.ui.setSaved(false);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(scrabble.Scrabble.ui, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
                 }
             }
         });

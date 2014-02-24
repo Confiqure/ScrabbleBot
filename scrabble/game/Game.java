@@ -1,6 +1,5 @@
 package scrabble.game;
 
-import java.awt.Component;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,10 +57,10 @@ public class Game {
     /**
      * Scans each possible move and loops through all the possible words that can be formed and prints highest scoring move.
      * 
-     * @param component   the component to display JOptionPane inside. null for no component
      * @param tilesInHand all of the tiles in the player's hand
      */
-    public void getBestMove(final Component component, final String tilesInHand) {
+    public void getBestMove(final String tilesInHand) {
+        JOptionPane.showMessageDialog(scrabble.Scrabble.ui, "<html>ScrabbleBot will now attempt to calculate the best move possible.<br>Please continue and wait a moment for the calculation to be completed.</html>");
         Regex reg = new Regex(null, null, null, false);
         String newWord = "";
         int highest = 0;
@@ -75,7 +74,7 @@ public class Game {
                 }
             }
         }
-        JOptionPane.showMessageDialog(component, "Play '" + newWord + "' at " + reg.start + " scoring " + highest + " points.");
+        JOptionPane.showMessageDialog(scrabble.Scrabble.ui, "Play '" + newWord + "' at " + reg.start + " scoring " + highest + " points.");
     }
 
     /**

@@ -30,10 +30,10 @@ public class UI extends JFrame {
 
     private final JMenuBar menuBar = new JMenuBar();
     private final JMenu file = new JMenu("File"), options = new JMenu("Options");
-    private final JMenuItem loadGame = new JMenuItem("Load game"), saveGame = new JMenuItem("Save game"), bestMove = new JMenuItem("Get best move"), tilesInHand = new JMenuItem("Change tiles in hand");
+    private final JMenuItem loadGame = new JMenuItem("Load game"), saveGame = new JMenuItem("Save game"), bestMove = new JMenuItem("Calculate best move");
     private final JFileChooser fileChooser = new JFileChooser();
     private final Game game = new Game();
-    private String letters, loadedGame = "New";
+    private String loadedGame = "New";
     private boolean saved = true;
 
     /**
@@ -80,18 +80,15 @@ public class UI extends JFrame {
         menuBar.add(file);
         bestMove.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
-                getBestMove();
+            public void actionPerformed(final ActionEvent arg0) {
+                final String letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
+                if (letters == null || !Pattern.matches("[a-zA-Z]+", letters)) {
+                    JOptionPane.showMessageDialog(UI.this, "Invalid input received.", "Warning!", JOptionPane.WARNING_MESSAGE);
+                }
+                game.getBestMove(letters);
             }
         });
         options.add(bestMove);
-        tilesInHand.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent arg0) {
-                processEvent();
-            }
-        });
-        options.add(tilesInHand);
         menuBar.add(options);
         setJMenuBar(menuBar);
         add(game.getBoard());
@@ -116,32 +113,9 @@ public class UI extends JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             final File selected = fileChooser.getSelectedFile();
             IO.saveTiles(game.getBoard(), selected);
+            loadedGame = selected.getName().substring(0, selected.getName().indexOf(".") == -1 ? selected.getName().length() : selected.getName().indexOf("."));
             setSaved(true);
         }
-    }
-
-    private void getBestMove() {
-        new Thread() {
-            @Override
-            public void run() {
-                game.getBestMove(UI.this, letters);
-            }
-        }.start();
-    }
-
-    private void requestLettersInHand() {
-        do {
-            letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
-        } while (letters == null);
-        if (!Pattern.matches("[a-zA-Z]+", letters)) {
-            JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
-            requestLettersInHand();
-        }
-    }
-
-    private void processEvent() {
-        requestLettersInHand();
-        getBestMove();
     }
 
 }
