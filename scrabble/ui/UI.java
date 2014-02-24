@@ -28,46 +28,13 @@ public class UI extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * JMenuBar The menu bar that will appear at the top of the user interface.
-     */
     private final JMenuBar menuBar = new JMenuBar();
-    /**
-     * JMenu The options menu that will be attached to the JMenuBar at the top of this user interface.
-     */
-    private final JMenu options = new JMenu("Options");
-    /**
-     * JMenuItem The bestMove menu item that will be attached to the options menu at the top of this user interface. When the user selects this component an event will be triggered and the next best available move will be calculated.
-     */
-    private final JMenuItem bestMove = new JMenuItem("Get best move");
-    /**
-     * JMenuItem The tilesInHand menu item that will be attached to the options menu at the top of this user interface. When the user selects this component an event will be triggered requesting the user to input the tiles they currently have in hand.
-     */
-    private final JMenuItem tilesInHand = new JMenuItem("Change tiles in hand");
-    /**
-     * JMenu The file menu that will be attached to the JMenuBar at the top of this user interface.
-     */
-    private final JMenu file = new JMenu("File");
-    /**
-     * JMenuItem The loadGame menu item that will be attached to the file menu at the top of this user interface. When the user selects this component an event will be triggered requesting the user to select a file to load a previous game from.
-     */
-    private final JMenuItem loadGame = new JMenuItem("Load game");
-    /**
-     * JMenuItem The saveGame menu item that will be attached to the file menu at the top of this user interface. When the user selects this component an event will be triggered requesting the user to select a location to save the current game to.
-     */
-    private final JMenuItem saveGame = new JMenuItem("Save game");
-    /**
-     * JFileChooser The fileChooser this user interface uses to obtain file location information from the user.
-     */
+    private final JMenu file = new JMenu("File"), options = new JMenu("Options");
+    private final JMenuItem loadGame = new JMenuItem("Load game"), saveGame = new JMenuItem("Save game"), bestMove = new JMenuItem("Get best move"), tilesInHand = new JMenuItem("Change tiles in hand");
     private final JFileChooser fileChooser = new JFileChooser();
-    /**
-     * Game The game.
-     */
     private final Game game = new Game();
-    /**
-     * String the current letters in hand.
-     */
-    private String letters;
+    private String letters, loadedGame = "New";
+    private boolean saved = true;
 
     /**
      * Constructs a new UI.
@@ -76,12 +43,14 @@ public class UI extends JFrame {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ignored) {}
-        setTitle("ScrabbleBot");
+        setSaved(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(final WindowEvent e) {
-                saveGame();
+                if (!saved) {
+                    saveGame();
+                }
             }
         });
         loadGame.addActionListener(new ActionListener() {
@@ -92,6 +61,8 @@ public class UI extends JFrame {
                     if (returnVal == JFileChooser.APPROVE_OPTION) {
                         final File file = fileChooser.getSelectedFile();
                         IO.loadTiles(game.getBoard(), file);
+                        loadedGame = file.getName().substring(0, file.getName().indexOf(".") == -1 ? file.getName().length() : file.getName().indexOf("."));
+                        setSaved(true);
                     }
                 }
             }
@@ -131,44 +102,43 @@ public class UI extends JFrame {
     }
 
     /**
-     * Opens a dialog and prompts the user to select a file to save the current game to.
+     * Sets the Game saved state.
+     * 
+     * @param savedState Game saved state
      */
+    public final void setSaved(final boolean savedState) {
+        saved = savedState;
+        setTitle("ScrabbleBot - " + loadedGame + (saved ? "" : " *"));
+    }
+
     private void saveGame() {
         final int returnVal = fileChooser.showDialog(UI.this, "Save");
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             final File selected = fileChooser.getSelectedFile();
             IO.saveTiles(game.getBoard(), selected);
+            setSaved(true);
         }
     }
 
-    /**
-     *  @see scrabble.game.Game#getBestMove
-     */
     private void getBestMove() {
         new Thread() {
             @Override
             public void run() {
-                game.getBestMove(letters);
+                game.getBestMove(UI.this, letters);
             }
         }.start();
     }
 
-    /**
-     * Displays an input dialogue prompting the user to enter the letters they currently have in hand.
-     */
     private void requestLettersInHand() {
         do {
             letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
         } while (letters == null);
-        if (letters.equals("null") || !Pattern.matches("[a-zA-Z]+", letters)) {
+        if (!Pattern.matches("[a-zA-Z]+", letters)) {
             JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
             requestLettersInHand();
         }
     }
 
-    /**
-     * Calls #requestLettersInHand to obtain the users current letters and then calls #getBestMove to find the word that will score the highest points.
-     */
     private void processEvent() {
         requestLettersInHand();
         getBestMove();

@@ -48,8 +48,10 @@ public class Tile extends JButton {
                 }
                 if (letter.isEmpty() || letter.equals(" ")) {
                     setText(" ");
+                    scrabble.Scrabble.ui.setSaved(false);
                 } else if (Pattern.matches("[a-zA-Z]+", letter)) {
                     setText(letter);
+                    scrabble.Scrabble.ui.setSaved(false);
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
                 }

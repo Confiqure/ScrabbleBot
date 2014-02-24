@@ -13,6 +13,8 @@ import scrabble.ui.UI;
  */
 public class Scrabble {
 
+    public static UI ui;
+
     /**
      * Main method.
      */
@@ -23,7 +25,7 @@ public class Scrabble {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                final UI ui = new UI();
+                ui = new UI();
             }
         });
     }
