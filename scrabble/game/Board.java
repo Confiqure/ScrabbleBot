@@ -20,14 +20,14 @@ public class Board extends JPanel {
     public static final int[][] CENTRE_TILE_COORDS = {{7, 7}};
 
     /**
-     * The x and y coordinates of the double word score tiles.
+     * The x and y coordinates of the double letter score tiles.
      */
     public static final int[][] DOUBLE_LETTER_COORDS = {
-        {1, 2}, {1, 12}, {2, 1}, {2, 4}, {2, 10}, {2, 13}, {4, 2}, {4, 6}, {4, 8}, {4, 12}, {6, 4}, {6, 10}, {8, 4}, {8, 10}, {10, 2}, {10, 6}, {10, 8}, {10, 12}
+        {1, 2}, {1, 12}, {2, 1}, {2, 4}, {2, 10}, {2, 13}, {4, 2}, {4, 6}, {4, 8}, {4, 12}, {6, 4}, {6, 10}, {8, 4}, {8, 10}, {10, 2}, {10, 6}, {10, 8}, {10, 12}, {12, 1}, {12, 4}, {12, 10}, {12, 13}, {13, 2}, {13, 12}
     };
 
     /**
-     * The x and y coordinates of the double letter score tiles.
+     * The x and y coordinates of the double word score tiles.
      */
     public static final int[][] DOUBLE_WORD_COORDS = {
         {1, 5}, {1, 9}, {3, 7}, {5, 1}, {5, 13}, {7, 3}, {7, 11}, {9, 1}, {9, 13}, {11, 7}, {13, 5}, {13, 9}
@@ -56,7 +56,7 @@ public class Board extends JPanel {
             final JPanel rowPanel = new JPanel();
             rowPanel.setLayout(new BoxLayout(rowPanel, BoxLayout.X_AXIS));
             for (int column = 0; column < tiles[row].length; column ++) {
-                tiles[row][column] = new Tile(row, column);
+                tiles[row][column] = new Tile(column, row);
                 rowPanel.add(tiles[row][column]);
             }
             add(rowPanel);

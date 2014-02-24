@@ -9,6 +9,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JOptionPane;
 
 import scrabble.game.wrappers.Regex;
 
@@ -61,10 +62,9 @@ public class Game {
     public void getBestMove(final String tilesInHand) {
         Regex reg = new Regex(null, null, null, false);
         String newWord = "";
-        int highest = 0, words = 0;
+        int highest = 0;
         for (final Regex regex : new MoveFinder(board).getValidTiles()) {
             for (final String word : getWords(tilesInHand + regex.playOff)) {
-                words ++;
                 final int points = getPoints(regex, word);
                 if (word.matches(regex.regex) && !word.equals(regex.playOff) && points > highest) {
                     reg = regex;
@@ -73,8 +73,7 @@ public class Game {
                 }
             }
         }
-        System.out.println("Scanned " + words + " words");
-        System.out.println(reg.start + "\t" + newWord + "\t" + highest + "\t" + reg.regex);
+        JOptionPane.showMessageDialog(null, "Play '" + newWord + "' at " + reg.start + " scoring " + highest + " points.");
     }
 
     /**

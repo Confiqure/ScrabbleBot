@@ -78,27 +78,13 @@ public class UI extends JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ignored) {}
         setTitle("ScrabbleBot");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        bestMove.addActionListener(new ActionListener() {
-
+        addWindowListener(new WindowAdapter() {
             @Override
-            public void actionPerformed(final ActionEvent e) {
-                getBestMove();
+            public void windowClosing(final WindowEvent e) {
+                saveGame();
             }
-
         });
-        options.add(bestMove);
-        tilesInHand.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent arg0) {
-                processEvent();
-            }
-
-        });
-        options.add(tilesInHand);
-        menuBar.add(options);
         loadGame.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (e.getSource() == loadGame) {
@@ -109,29 +95,35 @@ public class UI extends JFrame {
                     }
                 }
             }
-
         });
         file.add(loadGame);
         saveGame.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 if (e.getSource() == saveGame) {
                     saveGame();
                 }
             }
-
         });
         file.add(saveGame);
         menuBar.add(file);
-        setJMenuBar(menuBar);
-        add(game.getBoard());
-        addWindowListener(new WindowAdapter() {
+        bestMove.addActionListener(new ActionListener() {
             @Override
-            public void windowClosing(final WindowEvent e) {
-                saveGame();
+            public void actionPerformed(final ActionEvent e) {
+                getBestMove();
             }
         });
+        options.add(bestMove);
+        tilesInHand.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent arg0) {
+                processEvent();
+            }
+        });
+        options.add(tilesInHand);
+        menuBar.add(options);
+        setJMenuBar(menuBar);
+        add(game.getBoard());
         pack();
         setLocationRelativeTo(getOwner());
         setResizable(false);
