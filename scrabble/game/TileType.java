@@ -10,9 +10,9 @@ import java.awt.Color;
 public enum TileType {
 
     CENTRE(Board.CENTRE_TILE_COORDS, Color.PINK),
-    REGULAR(new int[][]{}, Color.GRAY),
-    DOUBLE_LETTER(Board.DOUBLE_LETTER_COORDS, Color.RED),
-    DOUBLE_WORD(Board.DOUBLE_WORD_COORDS, Color.BLUE),
+    REGULAR(new int[][]{}, new Color(211, 211, 211)),
+    DOUBLE_LETTER(Board.DOUBLE_LETTER_COORDS, Color.BLUE),
+    DOUBLE_WORD(Board.DOUBLE_WORD_COORDS, Color.RED),
     TRIPLE_LETTER(Board.TRIPLE_LETTER_COORDS, Color.GREEN),
     TRIPLE_WORD(Board.TRIPLE_WORD_COORDS, Color.YELLOW);
 

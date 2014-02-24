@@ -139,7 +139,7 @@ public class UI extends JFrame {
     }
 
     /**
-     * Opens a dialogue and prompts the user to select a file to save the current game to.
+     * Opens a dialog and prompts the user to select a file to save the current game to.
      */
     private void saveGame() {
         final int returnVal = fileChooser.showDialog(UI.this, "Save");
@@ -175,8 +175,7 @@ public class UI extends JFrame {
     }
 
     /**
-     * Calls requestLettersInHand to obtain the users current letters and then calls getBestMove
-     * to find the word that will score the highest points.
+     * Calls #requestLettersInHand to obtain the users current letters and then calls #getBestMove to find the word that will score the highest points.
      */
     private void processEvent() {
         requestLettersInHand();

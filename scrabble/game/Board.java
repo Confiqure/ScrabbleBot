@@ -20,17 +20,17 @@ public class Board extends JPanel {
     public static final int[][] CENTRE_TILE_COORDS = {{7, 7}};
 
     /**
-     * The x and y coordinates of the double letter score tiles.
+     * The x and y coordinates of the double word score tiles.
      */
     public static final int[][] DOUBLE_LETTER_COORDS = {
-        {1, 5}, {1, 9}, {3, 7}, {5, 1}, {5, 13}, {7, 3}, {7, 11}, {9, 1}, {9, 13}, {11, 7}, {13, 5}, {13, 9}
+        {1, 2}, {1, 12}, {2, 1}, {2, 4}, {2, 10}, {2, 13}, {4, 2}, {4, 6}, {4, 8}, {4, 12}, {6, 4}, {6, 10}, {8, 4}, {8, 10}, {10, 2}, {10, 6}, {10, 8}, {10, 12}
     };
 
     /**
-     * The x and y coordinates of the double word score tiles.
+     * The x and y coordinates of the double letter score tiles.
      */
     public static final int[][] DOUBLE_WORD_COORDS = {
-        {1, 2}, {1, 12}, {2, 1}, {2, 4}, {2, 10}, {2, 13}, {4, 2}, {4, 6}, {4, 8}, {4, 12}, {6, 4}, {6, 10}, {8, 4}, {8, 10}, {10, 2}, {10, 6}, {10, 8}, {10, 12}
+        {1, 5}, {1, 9}, {3, 7}, {5, 1}, {5, 13}, {7, 3}, {7, 11}, {9, 1}, {9, 13}, {11, 7}, {13, 5}, {13, 9}
     };
 
     /**
@@ -75,7 +75,7 @@ public class Board extends JPanel {
         if (x < 0 || x > 14 || y < 0 || y > 14) {
             return null;
         }
-        return tiles[x][y];
+        return tiles[y][x];
     }
 
     /**

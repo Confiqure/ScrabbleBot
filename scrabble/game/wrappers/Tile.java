@@ -15,7 +15,7 @@ import scrabble.game.TileType;
 /**
 * Class containing Tile data.
 * 
-* @author Robert G
+* @author Robert-G
 */
 public class Tile extends JButton {
 

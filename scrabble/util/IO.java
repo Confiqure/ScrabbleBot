@@ -52,9 +52,9 @@ public class IO {
         try (final FileWriter writer = new FileWriter(file)) {
             for (int row = 0; row < board.getTiles().length; row ++) {
                 for (int column = 0; column < board.getTiles()[row].length; column ++) {
-                    final String letter = board.getLetter(row, column);
+                    final String letter = board.getLetter(column, row);
                     if (letter != null && !letter.equals(" ")) {
-                        writer.write(row + "#" + column + "#" + letter + ", ");
+                        writer.write(column + "#" + row + "#" + letter + ", ");
                     }
                 }
             }

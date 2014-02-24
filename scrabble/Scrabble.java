@@ -1,6 +1,8 @@
 package scrabble;
 
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import scrabble.ui.UI;
 
 /**
@@ -15,13 +17,14 @@ public class Scrabble {
      * Main method.
      */
     public static void main(final String[] args) {
-       SwingUtilities.invokeLater(new Runnable() {
-
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ignored) {}
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 final UI ui = new UI();
             }
-
         });
     }
 
