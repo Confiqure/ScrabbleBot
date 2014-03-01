@@ -45,7 +45,10 @@ public class Board extends JPanel {
      */
     public static final int[][] TRIPLE_WORD_COORDS = {{0, 3}, {0, 11}, {3, 0}, {3, 14}, {11, 0}, {11, 14}, {14, 3}, {14, 11}};
 
-    private final Tile[][] tiles = new Tile[15][15];
+    /**
+     * The Tile array for the game.
+     */
+    public Tile[][] tiles = new Tile[15][15];
 
     /**
      * Constructs a new board.

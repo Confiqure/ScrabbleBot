@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import scrabble.game.Board;
+import scrabble.game.wrappers.Tile;
 
 /**
  * Loads and saves data from disk.
@@ -23,6 +24,11 @@ public class IO {
      */
     public static void loadTiles(final Board board, final File file) {
         if (file.exists()) {
+            for (final Tile[] row : board.tiles) {
+                for (final Tile column : row) {
+                    column.setText(" ");
+                }
+            }
             try (final BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String line;
                 while ((line = br.readLine()) != null) {
