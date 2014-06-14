@@ -82,10 +82,11 @@ public class UI extends JFrame {
             @Override
             public void actionPerformed(final ActionEvent arg0) {
                 final String letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
-                if (letters == null || !Pattern.matches("[a-zA-Z]+", letters)) {
+                if (letters == null || !Pattern.matches("[a-zA-Z\\?]+", letters)) {
                     JOptionPane.showMessageDialog(UI.this, "Invalid input received.", "Warning!", JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
-                game.getBestMove(letters);
+                game.getBestMove(letters.replace("?", "%3F"));
             }
         });
         options.add(bestMove);

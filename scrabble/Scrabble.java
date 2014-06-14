@@ -20,6 +20,7 @@ public class Scrabble {
 
     /**
      * Main method.
+     * @param args
      */
     public static void main(final String[] args) {
         try {
