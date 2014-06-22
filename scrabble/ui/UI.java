@@ -89,10 +89,15 @@ public class UI extends JFrame implements ActionListener {
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		menuBar.setLayout(new GridLayout(1, 5));
 		bestMove.addActionListener(this);
+		bestMove.setFocusable(false);
 		tilesInHand.addActionListener(this);
+		tilesInHand.setFocusable(false);
 		newGame.addActionListener(this);
+		newGame.setFocusable(false);
 		loadGame.addActionListener(this);
+		loadGame.setFocusable(false);
 		saveGame.addActionListener(this);
+		saveGame.setFocusable(false);
 		menuBar.add(bestMove);
 		menuBar.add(tilesInHand);
 		menuBar.add(newGame);
