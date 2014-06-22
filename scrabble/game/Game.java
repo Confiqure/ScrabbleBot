@@ -17,7 +17,6 @@ import scrabble.game.movefinder.MoveFinder;
 import scrabble.game.scrabbleboard.ScrabbleBoard;
 import scrabble.game.tiletype.TileType;
 import scrabble.game.wrappers.Regex;
-import scrabble.game.wrappers.Tile;
 
 /**
  * @author MehSki11zOwn
@@ -93,31 +92,23 @@ public class Game {
 			}
 		}
 		if (!newWord.isEmpty()) {
+			newWord = newWord.substring(0, 1).toUpperCase() + newWord.substring(1).toLowerCase();
 			final int option = JOptionPane.showConfirmDialog(parent, "Do you want to add \"" + newWord + "\" to the board?",
 					"Move found.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			if (option == JOptionPane.OK_OPTION) {
-				final String startLetter = board.getLetterAt(reg.start.x, reg.start.y);
+				final int playoffX = reg.start.x, playoffY = reg.start.y;
+				final String playoffLetter = board.getLetterAt(reg.start.x, reg.start.y);
 				final char[] chars = newWord.toCharArray();
 				Point startPoint = null;
-				if (!reg.vert) {
-					for (int x = 0; x < chars.length; x++) {
-						if (String.valueOf(chars[x]).equalsIgnoreCase(startLetter)) {
-							startPoint = new Point(reg.start.x - x, reg.start.y);
-							break;
-						}
-					}
-				} else {
-					for (int y = 0; y < chars.length; y++) {
-						if (String.valueOf(chars[y]).equalsIgnoreCase(startLetter)) {
-							startPoint = new Point(reg.start.x, reg.start.y - y);
-							break;
-						}
+				for (int i = 0; i < chars.length; i++) {
+					if (String.valueOf(chars[i]).equalsIgnoreCase(playoffLetter)) {
+						startPoint = new Point((!reg.vert ? playoffX - i : playoffX), (!reg.vert ? playoffY : playoffY - i));
+						break;
 					}
 				}
 				for (int i = 0; i < chars.length; i++) {
 					final int x = !reg.vert? startPoint.x + i : startPoint.x, y = !reg.vert ? startPoint.y : startPoint.y + i;
-					final Tile tile = board.getTileAt(x, y);
-					tile.setText(String.valueOf(chars[i]).toUpperCase());
+					board.setLetterAtTile(x, y, String.valueOf(chars[i]).toUpperCase());
 				}
 			}
 		} else {
