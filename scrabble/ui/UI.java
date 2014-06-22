@@ -172,7 +172,7 @@ public class UI extends JFrame implements ActionListener {
 			if (Pattern.matches("[a-zA-Z]+", enteredVal)) {
 				letters = enteredVal;
 			} else {
-				JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
 				requestLettersInHand();
 			}
 		}
