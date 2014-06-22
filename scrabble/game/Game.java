@@ -102,11 +102,10 @@ public class Game {
 					"Move found: " + newWord + ", which scores: " + highest + ".", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			if (option == JOptionPane.OK_OPTION) {
 				final int playoffX = reg.start.x, playoffY = reg.start.y;
-				final String playoffLetter = board.getLetterAt(reg.start.x, reg.start.y);
 				final char[] chars = newWord.toCharArray();
 				Point startPoint = null;
 				for (int i = 0; i < chars.length; i++) {
-					if (String.valueOf(chars[i]).equalsIgnoreCase(playoffLetter)) {
+					if (String.valueOf(chars[i]).equalsIgnoreCase(reg.playOff)) {
 						startPoint = new Point((!reg.vert ? playoffX - i : playoffX), (!reg.vert ? playoffY : playoffY - i));
 						break;
 					}
