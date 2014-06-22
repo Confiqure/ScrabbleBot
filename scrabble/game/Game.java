@@ -99,7 +99,7 @@ public class Game {
 		if (!newWord.isEmpty()) {
 			newWord = newWord.substring(0, 1).toUpperCase() + newWord.substring(1).toLowerCase();
 			final int option = JOptionPane.showConfirmDialog(parent, "Do you want to add \"" + newWord + "\" to the board?",
-					"Move found.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					"Move found: " + newWord + ", which scores: " + highest + ".", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			if (option == JOptionPane.OK_OPTION) {
 				final int playoffX = reg.start.x, playoffY = reg.start.y;
 				final String playoffLetter = board.getLetterAt(reg.start.x, reg.start.y);

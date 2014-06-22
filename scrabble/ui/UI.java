@@ -164,6 +164,9 @@ public class UI extends JFrame {
 	 *  @see also scrabble.game.Game.getBestMove(String letters)
 	 */
 	private void getBestMove() {
+		if (letters == null || letters.isEmpty()) {
+			requestLettersInHand();
+		}
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
