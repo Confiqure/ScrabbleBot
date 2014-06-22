@@ -144,9 +144,9 @@ public class MoveFinder {
 	 * @see    java.util.ArrayList
 	 */
 	public ArrayList<Regex> getValidTiles() {
-		tiles = new ArrayList<>();
-		for (int x = 0; x < 15; x ++) {
-			for (int y = 0; y < 15; y ++) {
+		tiles.clear();
+		for (int x = 0; x < 15; x++) {
+			for (int y = 0; y < 15; y++) {
 				String playOff = board.getLetterAt(x, y);
 				if (!playOff.equals(" ")) {
 					checkTop(x, y, playOff);

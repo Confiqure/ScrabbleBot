@@ -8,9 +8,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.swing.JOptionPane;
 
 import scrabble.game.movefinder.MoveFinder;
@@ -26,50 +23,47 @@ import scrabble.ui.UI;
 public class Game {
 
 	/**
-	 * Map mapping each letter in the English alphabet to a specific point value.
+	 * 
+	 * @author Robert G
+	 *An enum containing every letter of the English alphabet, eash assigned a point value.
 	 */
-	private final Map<String, Integer> pointKey = new HashMap<>();
+	public enum Letter {
+		
+		A(1), B(4), C(4), D(2), E(1),
+		F(4), G(3), H(3), I(1), J(10),
+		K(5), L(2), M(4), N(2), O(1),
+		P(4), Q(10), R(1), S(1), T(1),
+		U(2), V(5), W(4), X(8), Y(3), 
+		Z(10);
+		
+		private final int value;
+		
+		private Letter(int value) {
+			this.value = value;
+		}
+
+		public int getValue() {
+			return value;
+		}
+		
+	}
 	
 	/**
 	 * ScrabbleBoard the board displayed by the user interface.
 	 */
-	private final ScrabbleBoard board = new ScrabbleBoard();
+	private final ScrabbleBoard board;
 	
 	/**
-	 * 
+	 * MoveFinder the movefinder that will find the bext available move on the board.
 	 */
-	private final MoveFinder moveFinder = new MoveFinder(board);
-
+	private final MoveFinder moveFinder;
+	
 	/**
 	 * Constructs a new game.
 	 */
 	public Game() {
-		pointKey.put("a", 1);
-		pointKey.put("b", 4);
-		pointKey.put("c", 4);
-		pointKey.put("d", 2);
-		pointKey.put("e", 1);
-		pointKey.put("f", 4);
-		pointKey.put("g", 3);
-		pointKey.put("h", 3);
-		pointKey.put("i", 1);
-		pointKey.put("j", 10);
-		pointKey.put("k", 5);
-		pointKey.put("l", 2);
-		pointKey.put("m", 4);
-		pointKey.put("n", 2);
-		pointKey.put("o", 1);
-		pointKey.put("p", 4);
-		pointKey.put("q", 10);
-		pointKey.put("r", 1);
-		pointKey.put("s", 1);
-		pointKey.put("t", 1);
-		pointKey.put("u", 2);
-		pointKey.put("v", 5);
-		pointKey.put("w", 4);
-		pointKey.put("x", 8);
-		pointKey.put("y", 3);
-		pointKey.put("z", 10);
+		board = new ScrabbleBoard();
+		moveFinder = new MoveFinder(board);
 	}
 
 	/**
@@ -128,6 +122,15 @@ public class Game {
 		return this.board;
 	}
 
+	public int getLetterValue(char character) {
+		for (Letter letter : Letter.values()) {
+			if (letter.name().equalsIgnoreCase(String.valueOf(character))) {
+				return letter.getValue();
+			}
+		}
+		return 1;
+	}
+	
 	/**
 	 * Calculates the amount of points a specific word would yield when played in a specific position on the board.
 	 * 
@@ -151,7 +154,7 @@ public class Game {
 			int changed = 0;
 			for (final Point p : used) {
 				if (p.x == test.x && p.y == test.y) {
-					changed = pointKey.get(word.toCharArray()[i] + "");
+					changed = getLetterValue(array[i]);
 					break;
 				}
 			}
@@ -161,23 +164,22 @@ public class Game {
 			}
 			switch (TileType.getTileType(test.x, test.y)) {
 			case DOUBLE_LETTER:
-				total += pointKey.get(word.toCharArray()[i] + "") * 2;
+				total += getLetterValue(array[i]) * 2;
 				break;
 			case DOUBLE_WORD:
-				total += pointKey.get(word.toCharArray()[i] + "");
+				total += getLetterValue(array[i]);
 				multiplier *= 2;
 				break;
 			case TRIPLE_LETTER:
-				total += pointKey.get(word.toCharArray()[i] + "") * 3;
+				total += getLetterValue(array[i]) * 3;
 				break;
 			case TRIPLE_WORD:
-				total += pointKey.get(word.toCharArray()[i] + "");
+				total += getLetterValue(array[i]);
 				multiplier *= 3;
 				break;
 			default:
-				total += pointKey.get(word.toCharArray()[i] + "");
+				total += getLetterValue(array[i]);
 				break;
-
 			}
 		}
 		return total * multiplier;
