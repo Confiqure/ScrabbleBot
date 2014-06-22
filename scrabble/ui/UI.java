@@ -114,14 +114,22 @@ public class UI extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 	
-	/**
-	 * Opens a dialogue and prompts the user to select a file to save the current game to.
-	 */
-	private void saveGame() {
-		final int returnVal = fileChooser.showDialog(this, "Save");
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            IO.saveTiles(game.getBoard(), fileChooser.getSelectedFile());
-        }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() instanceof JButton) {
+			final JButton button = (JButton)e.getSource();
+			if (button == bestMove) {
+				getBestMove();
+			} else if (button == tilesInHand) {
+				requestLettersInHand();
+			} else if (button == newGame) {
+				game.getBoard().clear();
+			} else if (button == loadGame) {
+				loadGame();
+			} else if (button == saveGame) {
+				saveGame();
+			}
+		}
 	}
 
 	/**
@@ -140,6 +148,19 @@ public class UI extends JFrame implements ActionListener {
 	}
 	
 	/**
+	 * Opens a dialogue and prompts the user to select a game to load.
+	 */
+	private void loadGame() {
+		final int returnVal = fileChooser.showDialog(this, "Load");
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			final File file = fileChooser.getSelectedFile();
+			if (fileChooser.accept(file)) {
+				IO.loadTiles(game.getBoard(), file);
+			}
+		}
+	}
+
+	/**
 	 * Displays an input dialogue prompting the user to enter the letters they currently have in hand.
 	 */
 	private void requestLettersInHand() {
@@ -157,28 +178,14 @@ public class UI extends JFrame implements ActionListener {
 		}
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() instanceof JButton) {
-			final JButton button = (JButton)e.getSource();
-			if (button == bestMove) {
-				getBestMove();
-			} else if (button == tilesInHand) {
-				requestLettersInHand();
-			} else if (button == newGame) {
-				game.getBoard().clear();
-			} else if (button == loadGame) {
-				 final int returnVal = fileChooser.showDialog(UI.this, "Load");
-			     if (returnVal == JFileChooser.APPROVE_OPTION) {
-			    	 final File file = fileChooser.getSelectedFile();
-			    	 if (fileChooser.accept(file)) {
-			    		 IO.loadTiles(game.getBoard(), file);
-			    	 }
-			     }
-			} else if (button == saveGame) {
-				saveGame();
-			}
-		}
+	/**
+	 * Opens a dialogue and prompts the user to select a file to save the current game to.
+	 */
+	private void saveGame() {
+		final int returnVal = fileChooser.showDialog(this, "Save");
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            IO.saveTiles(game.getBoard(), fileChooser.getSelectedFile());
+        }
 	}
 
 }
