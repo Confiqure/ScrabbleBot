@@ -1,5 +1,6 @@
 package scrabble.ui;
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -7,11 +8,10 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.regex.Pattern;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -26,41 +26,32 @@ import scrabble.util.IO;
 public class UI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-
 	/**
 	 * JMenuBar The menu bar that will appear at the top of the user interface.
 	 */
 	private final JMenuBar menuBar = new JMenuBar();
 	/**
-	 * JMenu The options menu that will be attached to the JMenuBar at the top of this user interface.
-	 */
-	private final JMenu options = new JMenu("Options");
-	/**
 	 * JMenuItem The bestMove menu item that will be attached to the options menu at the top of this user interface.
 	 * When the user selects this component an event will be triggered and the next best available move will be calculated.
 	 */
-	private final JMenuItem bestMove = new JMenuItem("Get best move");
+	private final JButton bestMove = new JButton("Get best move");
 	/**
 	 * JMenuItem The tilesInHand menu item that will be attached to the options menu at the top of this user interface.
 	 * When the user selects this component an event will be triggered requesting the user to input the tiles they currently have in hand.
 	 */
-	private final JMenuItem tilesInHand = new JMenuItem("Change tiles in hand");
-	/**
-	 * JMenu The file menu that will be attached to the JMenuBar at the top of this user interface.
-	 */
-	private final JMenu file = new JMenu("File");
+	private final JButton tilesInHand = new JButton("Change tiles in hand");
 	/**
 	 * JMenuItem The loadGame menu item that will be attached to the file menu at the top of this user interface.
 	 * When the user selects this component an event will be triggered requesting the user to select a file to load
 	 * a previous game from.
 	 */
-	private final JMenuItem loadGame = new JMenuItem("Load game");
+	private final JButton loadGame = new JButton("Load game");
 	/**
 	 * JMenuItem The saveGame menu item that will be attached to the file menu at the top of this user interface.
 	 * When the user selects this component an event will be triggered requesting the user to select a location
 	 * to save the current game to..
 	 */
-	private final JMenuItem saveGame = new JMenuItem("Save game");
+	private final JButton saveGame = new JButton("Save game");
 	/**
 	 * JFileChooser The fileChooser this user interface uses to obtain file location information from the user.
 	 */
@@ -78,7 +69,7 @@ public class UI extends JFrame {
 	 * String the current letters in hand.
 	 */
 	private String letters;
-
+	
 	/**
 	 * Constructs a new UI.
 	 */
@@ -88,6 +79,7 @@ public class UI extends JFrame {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ignored) {}
 		setTitle("ScrabbleBot");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		menuBar.setLayout(new GridLayout(1, 4));
 		bestMove.addActionListener(new ActionListener() {
 
 			@Override
@@ -96,7 +88,7 @@ public class UI extends JFrame {
 			}
 			
 		});
-		options.add(bestMove);
+		menuBar.add(bestMove);
 		tilesInHand.addActionListener(new ActionListener() {
 
 			@Override
@@ -105,8 +97,7 @@ public class UI extends JFrame {
 			}
 
 		});
-		options.add(tilesInHand);
-		menuBar.add(options);
+		menuBar.add(tilesInHand);
 		fileChooser.setFileHidingEnabled(true);
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setFileFilter(fileExtensionFilter);
@@ -127,7 +118,7 @@ public class UI extends JFrame {
 			}
 			
 		});
-		file.add(loadGame);
+		menuBar.add(loadGame);
 		saveGame.addActionListener(new ActionListener() {
 
 			@Override
@@ -142,8 +133,7 @@ public class UI extends JFrame {
 			}
 			
 		});
-		file.add(saveGame);
-		menuBar.add(file);
+		menuBar.add(saveGame);
 		setJMenuBar(menuBar);
 		add(game.getBoard());
 		addWindowListener(new WindowAdapter() {
