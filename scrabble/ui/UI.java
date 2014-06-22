@@ -23,7 +23,7 @@ import scrabble.game.Game;
 import scrabble.ui.charlimitdocument.CharLimitDocument;
 import scrabble.util.IO;
 
-public class UI extends JFrame {
+public class UI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	/**
@@ -83,69 +83,20 @@ public class UI extends JFrame {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ignored) {}
 		setTitle("ScrabbleBot");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		menuBar.setLayout(new GridLayout(1, 5));
-		bestMove.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				getBestMove();
-			}
-			
-		});
-		menuBar.add(bestMove);
-		tilesInHand.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				requestLettersInHand();
-			}
-
-		});
-		menuBar.add(tilesInHand);
-		newGame.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				game.getBoard().clear();
-			}
-			
-		});
-		menuBar.add(newGame);
 		fileChooser.setFileHidingEnabled(true);
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setFileFilter(fileExtensionFilter);
 		fileChooser.setAcceptAllFileFilterUsed(false);
-		loadGame.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == loadGame) {
-			        final int returnVal = fileChooser.showDialog(UI.this, "Load");
-			        if (returnVal == JFileChooser.APPROVE_OPTION) {
-			            final File file = fileChooser.getSelectedFile();
-			            if (fileChooser.accept(file)) {
-			            	IO.loadTiles(game.getBoard(), file);
-			            }
-			        }
-			   } 
-			}
-			
-		});
+		menuBar.setLayout(new GridLayout(1, 5));
+		bestMove.addActionListener(this);
+		tilesInHand.addActionListener(this);
+		newGame.addActionListener(this);
+		loadGame.addActionListener(this);
+		saveGame.addActionListener(this);
+		menuBar.add(bestMove);
+		menuBar.add(tilesInHand);
+		menuBar.add(newGame);
 		menuBar.add(loadGame);
-		saveGame.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == saveGame) {
-					if (game.getBoard().hasValidContent()) {
-						saveGame();
-					} else {
-						JOptionPane.showMessageDialog(null, "There is nothing to save!", "Warning!", JOptionPane.WARNING_MESSAGE);
-					}
-			   } 
-			}
-			
-		});
 		menuBar.add(saveGame);
 		setJMenuBar(menuBar);
 		add(game.getBoard());
@@ -202,6 +153,30 @@ public class UI extends JFrame {
 			} else {
 				JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
 				requestLettersInHand();
+			}
+		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() instanceof JButton) {
+			final JButton button = (JButton)e.getSource();
+			if (button == bestMove) {
+				getBestMove();
+			} else if (button == tilesInHand) {
+				requestLettersInHand();
+			} else if (button == newGame) {
+				game.getBoard().clear();
+			} else if (button == loadGame) {
+				 final int returnVal = fileChooser.showDialog(UI.this, "Load");
+			     if (returnVal == JFileChooser.APPROVE_OPTION) {
+			    	 final File file = fileChooser.getSelectedFile();
+			    	 if (fileChooser.accept(file)) {
+			    		 IO.loadTiles(game.getBoard(), file);
+			    	 }
+			     }
+			} else if (button == saveGame) {
+				saveGame();
 			}
 		}
 	}
