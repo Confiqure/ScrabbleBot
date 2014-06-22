@@ -154,7 +154,6 @@ public class MoveFinder {
 				}
 			}
 		}
-		System.out.println("Regexes: " + tiles.size());
 		return tiles;
 	}
 }

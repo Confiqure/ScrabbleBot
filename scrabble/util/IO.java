@@ -28,7 +28,7 @@ public class IO {
 					final String[] splits = line.split(", ");
 					for (String inf : splits) {
 						final String[] vars = inf.split("#");
-						board.setLetterAtTile(Integer.parseInt(vars[0]), Integer.parseInt(vars[1]), vars[2]);
+						board.setLetterAtTile(Integer.parseInt(vars[0]), Integer.parseInt(vars[1]), vars[2].toUpperCase());
 					}
 				}
 				br.close();

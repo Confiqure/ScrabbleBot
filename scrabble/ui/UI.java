@@ -14,6 +14,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -173,12 +174,12 @@ public class UI extends JFrame {
 	 *  @see also scrabble.game.Game.getBestMove(String letters)
 	 */
 	private void getBestMove() {
-		new Thread() {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				game.getBestMove(letters);
 			}
-		}.start();
+		});
 	}
 	
 	/**

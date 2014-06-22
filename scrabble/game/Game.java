@@ -14,6 +14,7 @@ import scrabble.game.movefinder.MoveFinder;
 import scrabble.game.scrabbleboard.ScrabbleBoard;
 import scrabble.game.tiletype.TileType;
 import scrabble.game.wrappers.Regex;
+import scrabble.game.wrappers.Tile;
 
 /**
  * @author MehSki11zOwn
@@ -77,10 +78,9 @@ public class Game {
 		}
 		Regex reg = new Regex(null, null, null, false);
 		String newWord = "";
-		int highest = 0, words = 0;
+		int highest = 0;
 		for (final Regex regex : moveFinder.getValidTiles()) {
 			for (final String word : getWords(tilesInHand + regex.playOff)) {
-				words ++;
 				final int points = getPoints(regex, word);
 				if (word.matches(regex.regex) && !word.equals(regex.playOff) && points > highest) {
 					reg = regex;
@@ -89,8 +89,28 @@ public class Game {
 				}
 			}
 		}
-		System.out.println("Scanned " + words + " words");
-		System.out.println(reg.start + "\t" + newWord + "\t" + highest + "\t" + reg.regex);
+		newWord.trim();
+		final String startLetter = board.getLetterAt(reg.start.x, reg.start.y);
+		final char[] chars = newWord.toCharArray();
+		Point startPoint = null;
+		if (!reg.vert) {
+			for (int x = 0; x < chars.length; x++) {
+				if (String.valueOf(chars[x]).equals(startLetter)) {
+					startPoint = new Point(reg.start.x - x, reg.start.y);
+				}
+			}
+		} else {
+			for (int y = 0; y < chars.length; y++) {
+				if (String.valueOf(chars[y]).equals(startLetter)) {
+					startPoint = new Point(reg.start.x, reg.start.y - y);
+				}
+			}
+		}
+		Tile tile;
+		for (int i = 0; i < chars.length; i++) {
+			tile = !reg.vert ? board.getTileAt(startPoint.x + i, startPoint.y) : board.getTileAt(startPoint.x, startPoint.y + i);
+			tile.setText(String.valueOf(chars[i]).toUpperCase());
+		}
 	}
 
 	/**
