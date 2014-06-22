@@ -31,27 +31,31 @@ public class UI extends JFrame {
 	 */
 	private final JMenuBar menuBar = new JMenuBar();
 	/**
-	 * JMenuItem The bestMove menu item that will be attached to the options menu at the top of this user interface.
-	 * When the user selects this component an event will be triggered and the next best available move will be calculated.
+	 * JButton The bestMove button that will be attached to the menu at the top of this user interface.
+	 * When the user clicks this component an event will be triggered and the next best available move will be calculated.
 	 */
-	private final JButton bestMove = new JButton("Get best move");
+	private final JButton bestMove = new JButton("Best move");
 	/**
-	 * JMenuItem The tilesInHand menu item that will be attached to the options menu at the top of this user interface.
-	 * When the user selects this component an event will be triggered requesting the user to input the tiles they currently have in hand.
+	 * JButton The tilesInHand button that will be attached to the menu at the top of this user interface.
+	 * When the user clicks this component an event will be triggered requesting the user to input the tiles they currently have in hand.
 	 */
-	private final JButton tilesInHand = new JButton("Change tiles in hand");
+	private final JButton tilesInHand = new JButton("Change Tiles");
 	/**
-	 * JMenuItem The loadGame menu item that will be attached to the file menu at the top of this user interface.
-	 * When the user selects this component an event will be triggered requesting the user to select a file to load
+	 * JButton The loadGame button that will be attached to the menu at the top of this user interface.
+	 * When the user clicks this component an event will be triggered requesting the user to select a file to load
 	 * a previous game from.
 	 */
-	private final JButton loadGame = new JButton("Load game");
+	private final JButton loadGame = new JButton("Load Game");
 	/**
-	 * JMenuItem The saveGame menu item that will be attached to the file menu at the top of this user interface.
-	 * When the user selects this component an event will be triggered requesting the user to select a location
-	 * to save the current game to..
+	 * JButton The saveGame button that will be attached to the menu at the top of this user interface.
+	 * When the user clicks this component an event will be triggered requesting the user to select a location
+	 * to save the current game to.
 	 */
-	private final JButton saveGame = new JButton("Save game");
+	private final JButton saveGame = new JButton("Save Game");
+	/**
+	 * JButton The clear board button that will be attached to the menu at the top of this user interface.
+	 */
+	private final JButton newGame = new JButton("New Game");
 	/**
 	 * JFileChooser The fileChooser this user interface uses to obtain file location information from the user.
 	 */
@@ -79,7 +83,7 @@ public class UI extends JFrame {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ignored) {}
 		setTitle("ScrabbleBot");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		menuBar.setLayout(new GridLayout(1, 4));
+		menuBar.setLayout(new GridLayout(1, 5));
 		bestMove.addActionListener(new ActionListener() {
 
 			@Override
@@ -98,6 +102,15 @@ public class UI extends JFrame {
 
 		});
 		menuBar.add(tilesInHand);
+		newGame.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				game.getBoard().clear();
+			}
+			
+		});
+		menuBar.add(newGame);
 		fileChooser.setFileHidingEnabled(true);
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setFileFilter(fileExtensionFilter);

@@ -101,17 +101,17 @@ public class Game {
 			final int option = JOptionPane.showConfirmDialog(parent, "Do you want to add \"" + newWord + "\" to the board?",
 					"Move found: " + newWord + ", which scores: " + highest + ".", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			if (option == JOptionPane.OK_OPTION) {
-				final int playoffX = reg.start.x, playoffY = reg.start.y;
+				int playoffX = reg.start.x, playoffY = reg.start.y;
 				final char[] chars = newWord.toCharArray();
-				Point startPoint = null;
 				for (int i = 0; i < chars.length; i++) {
 					if (String.valueOf(chars[i]).equalsIgnoreCase(reg.playOff)) {
-						startPoint = new Point((!reg.vert ? playoffX - i : playoffX), (!reg.vert ? playoffY : playoffY - i));
+						playoffY = reg.vert ? playoffY - i : playoffY;
+						playoffX = reg.vert ? playoffX : playoffX - i;
 						break;
 					}
 				}
 				for (int i = 0; i < chars.length; i++) {
-					final int x = !reg.vert? startPoint.x + i : startPoint.x, y = !reg.vert ? startPoint.y : startPoint.y + i;
+					final int x = !reg.vert? playoffX + i : playoffX, y = !reg.vert ? playoffY : playoffY + i;
 					board.setLetterAtTile(x, y, String.valueOf(chars[i]).toUpperCase());
 				}
 			}
