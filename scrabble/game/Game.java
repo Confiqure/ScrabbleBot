@@ -1,6 +1,6 @@
 package scrabble.game;
 
-import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import scrabble.game.movefinder.MoveFinder;
 import scrabble.game.scrabbleboard.ScrabbleBoard;
 import scrabble.game.tiletype.TileType;
 import scrabble.game.wrappers.Regex;
+import scrabble.ui.UI;
 
 /**
  * @author MehSki11zOwn
@@ -74,10 +75,12 @@ public class Game {
 	/**
 	 * Scans each possible move and loops through all the possible words that can be formed and prints highest scoring move.
 	 */
-	public void getBestMove(Component parent, String tilesInHand) {
+	public void getBestMove(UI parent, String tilesInHand) {
 		if (!board.hasValidContent()) {
 			return;
 		}
+		parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		parent.setTitle("ScrabbleBot, Finding best move...");
 		Regex reg = new Regex(null, null, null, false);
 		String newWord = "";
 		int highest = 0;
@@ -91,6 +94,8 @@ public class Game {
 				}
 			}
 		}
+		parent.setCursor(Cursor.getDefaultCursor());
+		parent.setTitle("ScrabbleBot");
 		if (!newWord.isEmpty()) {
 			newWord = newWord.substring(0, 1).toUpperCase() + newWord.substring(1).toLowerCase();
 			final int option = JOptionPane.showConfirmDialog(parent, "Do you want to add \"" + newWord + "\" to the board?",
