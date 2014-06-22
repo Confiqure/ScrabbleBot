@@ -92,30 +92,36 @@ public class Game {
 				}
 			}
 		}
-		final int option = JOptionPane.showConfirmDialog(parent, "Do you want to add " + newWord + " to the board?",
-				"Move found.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-		if (option == JOptionPane.OK_OPTION) {
-			final String startLetter = board.getLetterAt(reg.start.x, reg.start.y);
-			final char[] chars = newWord.toCharArray();
-			Point startPoint = null;
-			if (!reg.vert) {
-				for (int x = 0; x < chars.length; x++) {
-					if (String.valueOf(chars[x]).equals(startLetter)) {
-						startPoint = new Point(reg.start.x - x, reg.start.y);
+		if (!newWord.isEmpty()) {
+			final int option = JOptionPane.showConfirmDialog(parent, "Do you want to add \"" + newWord + "\" to the board?",
+					"Move found.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			if (option == JOptionPane.OK_OPTION) {
+				final String startLetter = board.getLetterAt(reg.start.x, reg.start.y);
+				final char[] chars = newWord.toCharArray();
+				Point startPoint = null;
+				if (!reg.vert) {
+					for (int x = 0; x < chars.length; x++) {
+						if (String.valueOf(chars[x]).equalsIgnoreCase(startLetter)) {
+							startPoint = new Point(reg.start.x - x, reg.start.y);
+							break;
+						}
+					}
+				} else {
+					for (int y = 0; y < chars.length; y++) {
+						if (String.valueOf(chars[y]).equalsIgnoreCase(startLetter)) {
+							startPoint = new Point(reg.start.x, reg.start.y - y);
+							break;
+						}
 					}
 				}
-			} else {
-				for (int y = 0; y < chars.length; y++) {
-					if (String.valueOf(chars[y]).equals(startLetter)) {
-						startPoint = new Point(reg.start.x, reg.start.y - y);
-					}
+				for (int i = 0; i < chars.length; i++) {
+					final int x = !reg.vert? startPoint.x + i : startPoint.x, y = !reg.vert ? startPoint.y : startPoint.y + i;
+					final Tile tile = board.getTileAt(x, y);
+					tile.setText(String.valueOf(chars[i]).toUpperCase());
 				}
 			}
-			Tile tile;
-			for (int i = 0; i < chars.length; i++) {
-				tile = !reg.vert ? board.getTileAt(startPoint.x + i, startPoint.y) : board.getTileAt(startPoint.x, startPoint.y + i);
-				tile.setText(String.valueOf(chars[i]).toUpperCase());
-			}
+		} else {
+			JOptionPane.showConfirmDialog(parent, "No moves found.", "Warning.", JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
