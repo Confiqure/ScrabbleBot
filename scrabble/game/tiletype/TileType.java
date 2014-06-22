@@ -11,17 +11,17 @@ import scrabble.game.scrabbleboard.ScrabbleBoard;
  */
 public enum TileType {
 
-	CENTRE(ScrabbleBoard.CENTRE_TILE_CO_ORDS, Color.PINK),
-	REGULAR(new byte[][]{}, Color.GRAY),
-	DOUBLE_LETTER(ScrabbleBoard.DOUBLE_LETTER_CO_ORDS, Color.RED),
-	DOUBLE_WORD(ScrabbleBoard.DOUBLE_WORD_CO_ORDS, Color.BLUE),
-	TRIPLE_LETTER(ScrabbleBoard.TRIPLE_LETTER_CO_ORDS, Color.GREEN),
-	TRIPLE_WORD(ScrabbleBoard.TRIPLE_WORD_CO_ORDS, Color.YELLOW);
+	CENTRE(ScrabbleBoard.CENTRE_TILE_COORDS, Color.PINK),
+	REGULAR(new int[][]{}, Color.GRAY),
+	DOUBLE_LETTER(ScrabbleBoard.DOUBLE_LETTER_COORDS, Color.RED),
+	DOUBLE_WORD(ScrabbleBoard.DOUBLE_WORD_COORDS, Color.BLUE),
+	TRIPLE_LETTER(ScrabbleBoard.TRIPLE_LETTER_COORDS, Color.GREEN),
+	TRIPLE_WORD(ScrabbleBoard.TRIPLE_WORD_COORDS, Color.YELLOW);
 
-	private final byte[][] co_ords;
+	private final int[][] co_ords;
 	private final Color color;
 	
-	private TileType(byte[][] co_ords, Color color) {
+	private TileType(int[][] co_ords, Color color) {
 		this.co_ords = co_ords;
 		this.color = color;
 	}
@@ -34,7 +34,7 @@ public enum TileType {
 	 */
 	public int compare(int x, int y) {
 		int result = -1;
-		for (byte[] co_ords : this.co_ords) {
+		for (int[] co_ords : this.co_ords) {
 			if (co_ords[0] == x && co_ords[1] == y) {
 				result = 1;
 				break;

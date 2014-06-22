@@ -101,7 +101,7 @@ public class UI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				processEvent();
+				requestLettersInHand();
 			}
 
 		});
@@ -177,7 +177,7 @@ public class UI extends JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				game.getBestMove(letters);
+				game.getBestMove(UI.this, letters);
 			}
 		});
 	}
@@ -198,15 +198,6 @@ public class UI extends JFrame {
 				requestLettersInHand();
 			}
 		}
-	}
-
-	/**
-	 * Calls requestLettersInHand to obtain the users current letters and then calls getBestMove
-	 * to find the word that will score the highest points.
-	 */
-	private void processEvent() {
-		requestLettersInHand();
-		getBestMove();
 	}
 
 }

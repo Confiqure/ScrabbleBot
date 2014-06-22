@@ -21,6 +21,7 @@ public class IO {
 	 * @param fileName
 	 */
 	public static void loadTiles(ScrabbleBoard board, File file) {
+		board.clear();
 		if (file.exists() && file.getName().contains(".game")) {
 			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 				String line;

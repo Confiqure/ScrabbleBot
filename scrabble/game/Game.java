@@ -1,5 +1,6 @@
 package scrabble.game;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +10,8 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.JOptionPane;
 
 import scrabble.game.movefinder.MoveFinder;
 import scrabble.game.scrabbleboard.ScrabbleBoard;
@@ -72,7 +75,7 @@ public class Game {
 	/**
 	 * Scans each possible move and loops through all the possible words that can be formed and prints highest scoring move.
 	 */
-	public void getBestMove(String tilesInHand) {
+	public void getBestMove(Component parent, String tilesInHand) {
 		if (!board.hasValidContent()) {
 			return;
 		}
@@ -89,27 +92,30 @@ public class Game {
 				}
 			}
 		}
-		newWord.trim();
-		final String startLetter = board.getLetterAt(reg.start.x, reg.start.y);
-		final char[] chars = newWord.toCharArray();
-		Point startPoint = null;
-		if (!reg.vert) {
-			for (int x = 0; x < chars.length; x++) {
-				if (String.valueOf(chars[x]).equals(startLetter)) {
-					startPoint = new Point(reg.start.x - x, reg.start.y);
+		final int option = JOptionPane.showConfirmDialog(parent, "Do you want to add " + newWord + " to the board?",
+				"Move found.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+		if (option == JOptionPane.OK_OPTION) {
+			final String startLetter = board.getLetterAt(reg.start.x, reg.start.y);
+			final char[] chars = newWord.toCharArray();
+			Point startPoint = null;
+			if (!reg.vert) {
+				for (int x = 0; x < chars.length; x++) {
+					if (String.valueOf(chars[x]).equals(startLetter)) {
+						startPoint = new Point(reg.start.x - x, reg.start.y);
+					}
+				}
+			} else {
+				for (int y = 0; y < chars.length; y++) {
+					if (String.valueOf(chars[y]).equals(startLetter)) {
+						startPoint = new Point(reg.start.x, reg.start.y - y);
+					}
 				}
 			}
-		} else {
-			for (int y = 0; y < chars.length; y++) {
-				if (String.valueOf(chars[y]).equals(startLetter)) {
-					startPoint = new Point(reg.start.x, reg.start.y - y);
-				}
+			Tile tile;
+			for (int i = 0; i < chars.length; i++) {
+				tile = !reg.vert ? board.getTileAt(startPoint.x + i, startPoint.y) : board.getTileAt(startPoint.x, startPoint.y + i);
+				tile.setText(String.valueOf(chars[i]).toUpperCase());
 			}
-		}
-		Tile tile;
-		for (int i = 0; i < chars.length; i++) {
-			tile = !reg.vert ? board.getTileAt(startPoint.x + i, startPoint.y) : board.getTileAt(startPoint.x, startPoint.y + i);
-			tile.setText(String.valueOf(chars[i]).toUpperCase());
 		}
 	}
 
