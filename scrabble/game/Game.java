@@ -1,30 +1,24 @@
 package scrabble.game;
 
 import java.awt.Cursor;
-import java.awt.Point;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 import scrabble.game.movefinder.MoveFinder;
 import scrabble.game.scrabbleboard.ScrabbleBoard;
-import scrabble.game.tiletype.TileType;
 import scrabble.game.wrappers.Regex;
+import scrabble.game.wrappers.Tile;
 import scrabble.ui.UI;
+import scrabble.util.IO;
 
 /**
  * @author MehSki11zOwn
  *
  */
 public class Game {
-
+	
 	/**
-	 * 
-	 * @author Robert G
 	 *An enum containing every letter of the English alphabet, eash assigned a point value.
 	 */
 	public enum Letter {
@@ -48,16 +42,44 @@ public class Game {
 		
 	}
 	
+	public static Letter getLetter(char character) {
+		for (Letter letter : Letter.values()) {
+			if (letter.name().equalsIgnoreCase(String.valueOf(character))) {
+				return letter;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param character
+	 * @return the value of the specified char.
+	 */
+	public static int getLetterValue(char character) {
+		final Letter letter = getLetter(character);
+		return letter == null ? 1 : letter.getValue();
+	}
+	
+	/**
+	 * 
+	 * @param character
+	 * @return the value of the specified String.
+	 */
+	public static int getLetterValue(String character) {
+		return getLetterValue(character.charAt(0));
+	}
+	
 	/**
 	 * ScrabbleBoard the board displayed by the user interface.
 	 */
 	private final ScrabbleBoard board;
-	
+
 	/**
 	 * MoveFinder the movefinder that will find the bext available move on the board.
 	 */
 	private final MoveFinder moveFinder;
-	
+
 	/**
 	 * Constructs a new game.
 	 */
@@ -65,55 +87,45 @@ public class Game {
 		board = new ScrabbleBoard();
 		moveFinder = new MoveFinder(board);
 	}
-
+	
 	/**
 	 * Scans each possible move and loops through all the possible words that can be formed and prints highest scoring move.
 	 */
 	public void getBestMove(UI parent, String tilesInHand) {
-		if (!board.hasValidContent()) {
-			return;
-		}
 		parent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		parent.setTitle("ScrabbleBot, Finding best move...");
-		Regex reg = new Regex(null, null, null, false);
-		String newWord = "";
-		int highest = 0;
+		ScrabbleMove bestMove = null;
 		for (final Regex regex : moveFinder.getValidTiles()) {
-			for (final String word : getWords(tilesInHand + regex.playOff)) {
-				final int points = getPoints(regex, word);
-				if (word.matches(regex.regex) && !word.equals(regex.playOff) && points > highest) {
-					reg = regex;
-					newWord = word;
-					highest = points;
+			for (final String word : IO.getWords(tilesInHand + regex.playOff)) {
+				if (word.matches(regex.regex) && !word.equals(regex.playOff)) {
+					final ScrabbleMove move = getScrabbleMove(regex, word);
+					if (move != null) {
+						if (bestMove == null || move.wordScore > bestMove.wordScore) {
+							System.out.println("Better move found: " + move);
+							bestMove = move;
+						}
+					}
 				}
 			}
 		}
 		parent.setCursor(Cursor.getDefaultCursor());
 		parent.setTitle("ScrabbleBot");
-		if (!newWord.isEmpty()) {
-			newWord = newWord.substring(0, 1).toUpperCase() + newWord.substring(1).toLowerCase();
+		if (bestMove != null) {
+			System.out.println("Best move: " + bestMove);
+			final String newWord = bestMove.word.substring(0, 1).toUpperCase() + bestMove.word.substring(1).toLowerCase();
 			final int option = JOptionPane.showConfirmDialog(parent, "Do you want to add \"" + newWord + "\" to the board?",
-					"Move found: " + newWord + ", which scores: " + highest + ".", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					"Move found: " + newWord + ", which scores: " + bestMove.wordScore + ".", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			if (option == JOptionPane.OK_OPTION) {
-				int playoffX = reg.start.x, playoffY = reg.start.y;
-				final char[] chars = newWord.toCharArray();
-				for (int i = 0; i < chars.length; i++) {
-					if (String.valueOf(chars[i]).equalsIgnoreCase(reg.playOff)) {
-						playoffY = reg.vert ? playoffY - i : playoffY;
-						playoffX = reg.vert ? playoffX : playoffX - i;
-						break;
-					}
-				}
-				for (int i = 0; i < chars.length; i++) {
-					final int x = !reg.vert? playoffX + i : playoffX, y = !reg.vert ? playoffY : playoffY + i;
-					board.setLetterAtTile(x, y, String.valueOf(chars[i]).toUpperCase());
+				final char[] chars = bestMove.word.toCharArray();
+				for (int i = 0; i < chars.length && i < bestMove.tiles.size(); i++) {
+					bestMove.tiles.get(i).setLetter(chars[i]);
 				}
 			}
 		} else {
 			JOptionPane.showConfirmDialog(parent, "No moves found.", "Warning.", JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE);
 		}
 	}
-
+	
 	/**
 	 * 
 	 * @return board.
@@ -121,109 +133,73 @@ public class Game {
 	public ScrabbleBoard getBoard() {
 		return this.board;
 	}
-
-	public int getLetterValue(char character) {
-		for (Letter letter : Letter.values()) {
-			if (letter.name().equalsIgnoreCase(String.valueOf(character))) {
-				return letter.getValue();
-			}
-		}
-		return 1;
-	}
 	
 	/**
-	 * Calculates the amount of points a specific word would yield when played in a specific position on the board.
 	 * 
-	 * @param r    the Regex to scan
-	 * @param word the word to calculate points from
-	 * @return     the amount of points the word yields
-	 * @see        Regex
+	 * @param r
+	 * @param word
+	 * @return
 	 */
-	public int getPoints(final Regex r, final String word) {
-		final ArrayList<Point> used = new ArrayList<>();
-		final char[] usedStr = r.playOff.toCharArray();
-		for (int i = 0; i < usedStr.length; i ++) {
-			used.add(new Point(r.start.x + (r.vert ? 0 : i), r.start.y + (r.vert ? i : 0)));
-		}
-		int x, y, multiplier = 1, total = 0;
-		x = r.start.x - (r.vert ? 0 : word.indexOf(r.playOff));
-		y = r.start.y - (r.vert ? word.indexOf(r.playOff) : 0);
-		final char[] array = word.toCharArray();
-		for (int i = 0; i < array.length; i ++) {
-			final Point test = new Point(x + (r.vert ? 0 : i), y + (r.vert ? i : 0));
-			int changed = 0;
-			for (final Point p : used) {
-				if (p.x == test.x && p.y == test.y) {
-					changed = getLetterValue(array[i]);
-					break;
-				}
-			}
-			if (changed != 0) {
-				total += changed;
-				continue;
-			}
-			switch (TileType.getTileType(test.x, test.y)) {
-			case DOUBLE_LETTER:
-				total += getLetterValue(array[i]) * 2;
-				break;
-			case DOUBLE_WORD:
-				total += getLetterValue(array[i]);
-				multiplier *= 2;
-				break;
-			case TRIPLE_LETTER:
-				total += getLetterValue(array[i]) * 3;
-				break;
-			case TRIPLE_WORD:
-				total += getLetterValue(array[i]);
-				multiplier *= 3;
-				break;
-			default:
-				total += getLetterValue(array[i]);
-				break;
-			}
-		}
-		return total * multiplier;
-	}
-
-	/**
-	 * Returns a list of possible words that can be formed using the characters inputted.
-	 * 
-	 * @param chars a String containing each character to use
-	 * @return      a list of possible words
-	 * @see         java.util.ArrayList
-	 */
-	public ArrayList<String> getWords(final String chars) {
-		final ArrayList<String> words = new ArrayList<>();
-		String total = "";
-		try {
-			final URLConnection spoof = new URL("http://wordfinder.yourdictionary.com/unscramble/" + chars + "?remember_tiles=false").openConnection();
-			spoof.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0;    H010818)");
-			try (final BufferedReader in = new BufferedReader(new InputStreamReader(spoof.getInputStream()))) {
-				String str;
-				while ((str = in.readLine()) != null) {
-					total += str;
-				}
-				in.close();
-			}
-		} catch (final IOException ex) {}
-		total = total.substring(total.indexOf("<hr>") + 4, total.indexOf("</section>", total.indexOf("<hr>")));
-		for (final String table : total.split("<a name=\"[0-9]\">")) {
-			if (!table.startsWith("</a>")) {
-				continue;
-			}
-			for (final String line : table.split("<a href=")) {
-				if (!line.startsWith("'http://www.yourdictionary.com/")) {
+	private ScrabbleMove getScrabbleMove(final Regex r, final String word) {
+		final ScrabbleMove move = new ScrabbleMove();
+		final ArrayList<Integer> wordBonuses = new ArrayList<Integer>();
+		final char[] chars = word.toCharArray();
+		final int wordLength = word.length();
+		int playoffX = r.start.x, playoffY = r.start.y;
+		final String playoff = board.getLetterAt(playoffX, playoffY).toLowerCase();
+		for (int i = 0; i < chars.length; i++) {
+			if (String.valueOf(chars[i]).equalsIgnoreCase(playoff)) {
+				/**
+				 * Needs a lot of work as somtimes returns wrong position resulting in unplayable word being place.
+				 * Only happens in words where the playoff letter appears more than once.
+				 */
+				playoffY = r.vert ? playoffY - i : playoffY;
+				playoffX = r.vert ? playoffX : playoffX - i;
+				if (!r.vert && playoffX + wordLength > board.width() || r.vert && playoffY + wordLength >= board.height()) {
 					continue;
 				}
-				for (final String row : line.split("<tr>")) {
-					if (row.equals("<td>")) {
-						continue;
-					}
-					words.add(row.substring(row.indexOf(">") + 1, row.startsWith("<td>") ? row.indexOf("</td>") : row.indexOf("</a>")));
-				}
+				break;
 			}
 		}
-		return words;
+		if (!r.vert && playoffX + wordLength > board.width() || r.vert && playoffY + wordLength > board.height()) {
+			//word doesn't fit on the board from playoff position.
+			//previously calculated playoff position is wrong.
+			return null;
+		}
+		move.word = word;
+		for (int i = 0; i < wordLength; i++) {
+			final Tile tile = board.getTileAt(r.vert ? playoffX : playoffX + i, r.vert ? playoffY + i : playoffY);
+			move.tiles.add(tile);
+			if (tile.getLetterValue() > 0) {
+				move.wordScore += tile.getLetterValue();
+				continue;
+			} else {
+				move.wordScore += getLetterValue(chars[i]) * tile.getLetterBonus();
+				wordBonuses.add(tile.getWordBonus());
+			}
+		}
+		for (int bonus : wordBonuses) {
+			move.wordScore = move.wordScore * bonus;
+		}
+		return move;
 	}
-
+	
+	private class ScrabbleMove {
+		
+		final ArrayList<Tile> tiles = new ArrayList<Tile>();
+		String word;
+		int wordScore;
+		
+		@Override
+		public String toString() {
+			String info = word + ", score["+wordScore+"] tiles to play on[";
+			for (Tile t : tiles) {
+				info+= t.getLocation();
+			}
+			info +="]";
+			return info;
+		}
+		
+	}
+	
 }

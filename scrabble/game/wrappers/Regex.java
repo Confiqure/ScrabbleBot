@@ -39,7 +39,6 @@ public class Regex {
     public Regex(final Point start, final String regex, final String playOff, final boolean vert) {
         this.start = start;
         this.regex = regex;
-        this.playOff = playOff;
         this.vert = vert;
     }
     
