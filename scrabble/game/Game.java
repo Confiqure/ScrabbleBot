@@ -180,9 +180,17 @@ public class Game {
 	}
 	
 	private class ScrabbleMove {
-		
+		/**
+		 * The tiles this word will be played on.
+		 */
 		final ArrayList<Tile> tiles = new ArrayList<Tile>();
+		/**
+		 * The word to play.
+		 */
 		String word;
+		/**
+		 * The score of this word including letter and word bonuses.
+		 */
 		int wordScore;
 		
 		@Override
