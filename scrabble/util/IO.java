@@ -116,7 +116,6 @@ public class IO {
 				}
 			}
 			Collections.sort(wordCache);
-			System.out.println("loaded " + wordCache.size() + " words.");
 		}
 		return wordCache;
 	}

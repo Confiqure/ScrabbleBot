@@ -146,9 +146,8 @@ public class Game {
 		final char[] chars = word.toCharArray();
 		final int wordLength = word.length();
 		int playoffX = r.start.x, playoffY = r.start.y;
-		final String playoff = board.getLetterAt(playoffX, playoffY).toLowerCase();
 		for (int i = 0; i < chars.length; i++) {
-			if (String.valueOf(chars[i]).equalsIgnoreCase(playoff)) {
+			if (String.valueOf(chars[i]).equalsIgnoreCase(r.playOff)) {
 				/**
 				 * Needs a lot of work as somtimes returns wrong position resulting in unplayable word being place.
 				 * Only happens in words where the playoff letter appears more than once.
@@ -160,11 +159,6 @@ public class Game {
 				}
 				break;
 			}
-		}
-		if (!r.vert && playoffX + wordLength > board.width() || r.vert && playoffY + wordLength > board.height()) {
-			//word doesn't fit on the board from playoff position.
-			//previously calculated playoff position is wrong.
-			return null;
 		}
 		move.word = word;
 		for (int i = 0; i < wordLength; i++) {
