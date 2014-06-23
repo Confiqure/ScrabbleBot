@@ -34,7 +34,6 @@ public class MoveFinder {
 		} else if (after > 0) {
 			regex += "[a-z]{0," + after + "}";
 		}
-		System.out.println(regex);
 		tiles.add(new Regex(new Point(x, y), regex, playOff, vert));
 	}
 

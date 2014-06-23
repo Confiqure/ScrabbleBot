@@ -145,13 +145,13 @@ public class Game {
 		final ArrayList<Integer> wordBonuses = new ArrayList<Integer>();
 		final char[] chars = word.toCharArray();
 		final int wordLength = word.length();
-		int playoffX = r.start.x, playoffY = r.start.y;
+		int playoffX = r.start.x , playoffY = r.start.y;
 		for (int i = 0; i < chars.length; i++) {
 			if (String.valueOf(chars[i]).equalsIgnoreCase(r.playOff)) {
-				/**
-				 * Needs a lot of work as somtimes returns wrong position resulting in unplayable word being place.
-				 * Only happens in words where the playoff letter appears more than once.
-				 */
+				 //*
+				 //* Needs a lot of work as somtimes returns wrong position resulting in unplayable word being place.
+				 //* Only happens in words where the playoff letter appears more than once.
+				 //*
 				playoffY = r.vert ? playoffY - i : playoffY;
 				playoffX = r.vert ? playoffX : playoffX - i;
 				if (!r.vert && playoffX + wordLength > board.width() || r.vert && playoffY + wordLength >= board.height()) {
@@ -162,7 +162,8 @@ public class Game {
 		}
 		move.word = word;
 		for (int i = 0; i < wordLength; i++) {
-			final Tile tile = board.getTileAt(r.vert ? playoffX : playoffX + i, r.vert ? playoffY + i : playoffY);
+			final int x = playoffX + (r.vert ? 0 : i), y = playoffY + (r.vert ? i : 0);
+			final Tile tile = board.getTileAt(x, y);
 			move.tiles.add(tile);
 			if (tile.getLetterValue() > 0) {
 				move.wordScore += tile.getLetterValue();
