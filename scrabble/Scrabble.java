@@ -9,7 +9,7 @@ import scrabble.ui.UI;
  *
  * Main class
  * 
- * @author MehSki11zOwn
+ * @author Dylan Wheeler
  */
 public class Scrabble {
 
@@ -20,17 +20,14 @@ public class Scrabble {
 
     /**
      * Main method.
-     * @param args
+     * @param args no arguments necessary
      */
     public static void main(final String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ignored) {}
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                ui = new UI();
-            }
+        SwingUtilities.invokeLater(() -> {
+            ui = new UI();
         });
     }
 

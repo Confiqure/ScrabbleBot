@@ -2,14 +2,13 @@ package scrabble.game;
 
 import java.awt.Point;
 import java.util.ArrayList;
-
 import scrabble.game.wrappers.Regex;
 
 /**
 *
 * Finds all possible moves.
 * 
-* @author MehSki11zOwn
+* @author Dylan Wheeler
 */
 public class MoveFinder {
 

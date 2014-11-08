@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
-
 import scrabble.game.wrappers.Regex;
 
 /**
  * 
- * @author MehSki11zOwn
+ * Main game class.
+ * 
+ * @author Dylan Wheeler
  */
 public class Game {
 

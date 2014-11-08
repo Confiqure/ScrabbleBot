@@ -3,10 +3,11 @@ package scrabble.game;
 import java.awt.Color;
 
 /**
-* Different tile types.
-* 
-* @author Robert-G
-*/
+ * 
+ * Different tile types.
+ * 
+ * @author Robert-G
+ */
 public enum TileType {
 
     CENTRE(Board.CENTRE_TILE_COORDS, Color.PINK),

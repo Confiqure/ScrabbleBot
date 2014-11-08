@@ -1,12 +1,10 @@
 package scrabble.ui;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.regex.Pattern;
-
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -15,15 +13,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import scrabble.game.Game;
 import scrabble.util.IO;
 
 /**
-* User Interface for ScrabbleBot
-* 
-* @author MehSki11zOwn, Robert-G
-*/
+ * 
+ * User Interface for ScrabbleBot.
+ * 
+ * @author Dylan Wheeler, Robert-G
+ */
 public class UI extends JFrame {
 
     private static final long serialVersionUID = 1L;
@@ -53,41 +51,32 @@ public class UI extends JFrame {
                 }
             }
         });
-        loadGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                if (e.getSource() == loadGame) {
-                    final int returnVal = fileChooser.showDialog(UI.this, "Load");
-                    if (returnVal == JFileChooser.APPROVE_OPTION) {
-                        final File file = fileChooser.getSelectedFile();
-                        IO.loadTiles(game.getBoard(), file);
-                        loadedGame = file.getName().substring(0, file.getName().indexOf(".") == -1 ? file.getName().length() : file.getName().indexOf("."));
-                        setSaved(true);
-                    }
+        loadGame.addActionListener((final ActionEvent e) -> {
+            if (e.getSource() == loadGame) {
+                final int returnVal = fileChooser.showDialog(UI.this, "Load");
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    final File file1 = fileChooser.getSelectedFile();
+                    IO.loadTiles(game.getBoard(), file1);
+                    loadedGame = file1.getName().substring(0, !file1.getName().contains(".") ? file1.getName().length() : file1.getName().indexOf("."));
+                    setSaved(true);
                 }
             }
         });
         file.add(loadGame);
-        saveGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                if (e.getSource() == saveGame) {
-                    saveGame();
-                }
+        saveGame.addActionListener((final ActionEvent e) -> {
+            if (e.getSource() == saveGame) {
+                saveGame();
             }
         });
         file.add(saveGame);
         menuBar.add(file);
-        bestMove.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent arg0) {
-                final String letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
-                if (letters == null || !Pattern.matches("[a-zA-Z\\?]+", letters)) {
-                    JOptionPane.showMessageDialog(UI.this, "Invalid input received.", "Warning!", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-                game.getBestMove(letters.replace("?", "%3F"));
+        bestMove.addActionListener((final ActionEvent e) -> {
+            final String letters = JOptionPane.showInputDialog("Enter letters currently in hand.");
+            if (letters == null || !Pattern.matches("[a-zA-Z\\?]+", letters)) {
+                JOptionPane.showMessageDialog(UI.this, "Invalid input received.", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
             }
+            game.getBestMove(letters.replace("?", "%3F"));
         });
         options.add(bestMove);
         menuBar.add(options);
@@ -114,7 +103,7 @@ public class UI extends JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             final File selected = fileChooser.getSelectedFile();
             IO.saveTiles(game.getBoard(), selected);
-            loadedGame = selected.getName().substring(0, selected.getName().indexOf(".") == -1 ? selected.getName().length() : selected.getName().indexOf("."));
+            loadedGame = selected.getName().substring(0, !selected.getName().contains(".") ? selected.getName().length() : selected.getName().indexOf("."));
             setSaved(true);
         }
     }

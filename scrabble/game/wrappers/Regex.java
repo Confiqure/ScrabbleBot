@@ -5,7 +5,7 @@ import java.awt.Point;
 /**
  * Class containing all regex data from each move possibility.
  * 
- * @author MehSki11zOwn
+ * @author Dylan Wheeler
  */
 public class Regex {
 
