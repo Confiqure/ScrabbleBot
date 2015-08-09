@@ -28,6 +28,10 @@ public class Regex {
      * Vertical move.
      */
     public boolean vert;
+    
+    public int before;
+    
+    public int after;
 
     /**
      * Constructor

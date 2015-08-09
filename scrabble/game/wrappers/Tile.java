@@ -1,13 +1,18 @@
 package scrabble.game.wrappers;
 
 import java.awt.Font;
-import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
+
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import scrabble.game.Game;
 import scrabble.game.TileType;
+import scrabble.util.CharLimit;
 
 /**
  * 
@@ -20,59 +25,136 @@ public class Tile extends JButton {
     private static final long serialVersionUID = 1L;
     private final TileType type;
     private final Point location;
+    private final int letterBonus;
+    private final int wordBonus;
+    private String letter = " ";
+    private int letterValue = 0;
 
-    /**
-     * Initializes new Tile on board.
-     * 
-     * @param x x coordinate
-     * @param y y coordinate
-     */
     public Tile(final int x, final int y) {
         type = TileType.getTileType(x, y);
+        switch (type) {
+            case DOUBLE_LETTER:
+                letterBonus = 2;
+                wordBonus = 1;
+                break;
+            case DOUBLE_WORD:
+                letterBonus = 1;
+                wordBonus = 2;
+                break;
+            case TRIPLE_LETTER:
+                letterBonus = 3;
+                wordBonus = 1;
+                break;
+            case TRIPLE_WORD:
+                letterBonus = 1;
+                wordBonus = 3;
+                break;
+            default:
+                letterBonus = 1;
+                wordBonus = 1;
+                break;
+        }
         location = new Point(x, y);
         setBackground(type.getColor());
         setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
-        setText(" ");
+        setText(letter);
         setFocusable(false);
-        addActionListener((final ActionEvent e) -> {
-            String letter = null;
-            try {
-                letter = JOptionPane.showInputDialog(scrabble.Scrabble.ui, "Enter a letter").substring(0, 1).toUpperCase();
-            } catch (final HeadlessException ex) {}
-            if (letter == null) {
-                return;
-            }
-            if (letter.isEmpty() || letter.equals(" ")) {
-                setText(" ");
-                scrabble.Scrabble.ui.setSaved(false);
-            } else if (Pattern.matches("[a-zA-Z]+", letter)) {
-                setText(letter);
-                scrabble.Scrabble.ui.setSaved(false);
-            } else {
-                JOptionPane.showMessageDialog(scrabble.Scrabble.ui, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
+        addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                final String curText = getText();
+                final JTextField input = new JTextField(new CharLimit(1), (curText.equals(" ") ? "" : curText), 1);
+                final Object[] info = { "Enter a letter.", input };
+                final int returnVal = JOptionPane.showConfirmDialog(null, info, "Input", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (returnVal == JOptionPane.OK_OPTION) {
+                    final String enteredVal = input.getText();
+                    if (enteredVal.equals(" ") || Pattern.matches("[a-zA-Z]+", enteredVal)) {
+                         setLetter(enteredVal.charAt(0));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
+                        actionPerformed(e);
+                    }
+                }
             }
         });
     }
-
+    
     /**
-     * Returns the TileType of this Tile.
-     * 
-     * @return the TileType
-     * @see    scrabble.game.TileType
+     * Clears the current letter.
      */
-    public TileType getTileType() {
-        return type;
+    public void clearLetter() {
+        setLetter(" ");
+    }
+    
+    /**
+     * 
+     * @return the current letter on this tile.
+     */
+    public String getLetter() {
+        return this.letter;
+    }
+    
+    /**
+     * 
+     * @return the letter multiplier.
+     */
+    public int getLetterBonus() {
+        return this.letterBonus;
+    }
+    
+    /**
+     * 
+     * @return The value current letters value if a letter is displayed, else 0;
+     */
+    public int getLetterValue() {
+        return this.letterValue;
     }
 
     /**
-     * Returns the location of the Tile's position on the game board, not its position on screen.
      * 
-     * @return the location
-     * @see    java.awt.Point
+     * The location refers to the tiles position on the game board and not position on screen.
+     * 
+     * @return the location of this Tile.
      */
     @Override
     public Point getLocation() {
         return this.location;
+    }
+    
+    /**
+     * 
+     * @return the TileType of this Tile.
+     */
+    public TileType getTileType() {
+        return this.type;
+    }
+
+    /**
+     * 
+     * @return the word bonus value of this tile
+     */
+    public int getWordBonus() {
+        return this.wordBonus;
+    }
+
+    /**
+     * 
+     * @param c character to set the letter to
+     * @see     scrabble.game.wrappers.Tile.setLetter(String letter);
+     */
+    public void setLetter(char c) {
+        setLetter(String.valueOf(c));
+    }
+
+    /**
+     * Sets the currently displayed letter.
+     * 
+     * @param letter the letter to display.
+     */
+    public void setLetter(final String letter) {
+        this.letter = letter;
+        this.letterValue = letter.equals(" ") ? 0 : Game.getLetterValue(letter);
+        this.setText(letter.toUpperCase());
     }
 
 }
