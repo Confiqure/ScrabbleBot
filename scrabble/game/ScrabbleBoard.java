@@ -1,9 +1,7 @@
-package scrabble.game.scrabbleboard;
+package scrabble.game;
 
 import java.awt.GridLayout;
-
 import javax.swing.JPanel;
-
 import scrabble.game.wrappers.Tile;
 
 /**
