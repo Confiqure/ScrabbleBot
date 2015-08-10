@@ -12,7 +12,7 @@ import scrabble.game.wrappers.Tile;
  */
 public class ScrabbleBoard extends JPanel {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The x and y coordinates of the center tile.
@@ -45,119 +45,119 @@ public class ScrabbleBoard extends JPanel {
      */
     public static final int[][] TRIPLE_WORD_COORDS = {{0, 3}, {0, 11}, {3, 0}, {3, 14}, {11, 0}, {11, 14}, {14, 3}, {14, 11}};
     
-	/**
-	 * The width of this board.
-	 */
-	private final int width = 15;
-	
-	/**
-	 * The height of this board.
-	 */
-	private final int height = width;
+    /**
+     * The width of this board.
+     */
+    private final int width = 15;
+    
+    /**
+     * The height of this board.
+     */
+    private final int height = width;
 
-	/**
-	 * Tile[][] The tiles that make up this board.
-	 */
-	private final Tile[][] tiles = new Tile[width][height];
+    /**
+     * Tile[][] The tiles that make up this board.
+     */
+    private final Tile[][] tiles = new Tile[width][height];
 
-	/**
-	 * Constructs a new scrabble board.
-	 */
-	public ScrabbleBoard() {
-		setLayout(new GridLayout(width, height));
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				final Tile tile = new Tile(x, y);
-				tiles[x][y] = tile;
-				add(tile);
-			}
-		}
-	}
-	
-	/**
-	 * Clears all letters currently on the board.
-	 */
-	public void clear() {
-		for (final Tile[] row : tiles) {
-			for (final Tile column : row) {
-				column.clearLetter();
-			}
-		}
-	}
-	
-	/**
-	 * 
-	 * @return the width of this board.
-	 */
-	public int width() {
-		return width;
-	}
-	
-	/**
-	 * 
-	 * @return the height of this board.
-	 */
-	public int height() {
-		return height;
-	}
-	
-	/**
-	 * Returns the Tile at the given (x, y) coordinate pair on the tile grid.
-	 * 
-	 * @param x x coordinate location on tile grid
-	 * @param y y coordinate location on tile grid
-	 * @return  the Tile
-	 */
-	public Tile getTileAt(final int x, final int y) {
-		return (x > -1 && x < width && y > -1 && y < height) ? tiles[x][y] : null;
-	}
+    /**
+     * Constructs a new scrabble board.
+     */
+    public ScrabbleBoard() {
+        setLayout(new GridLayout(width, height));
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                final Tile tile = new Tile(x, y);
+                tiles[x][y] = tile;
+                add(tile);
+            }
+        }
+    }
+    
+    /**
+     * Clears all letters currently on the board.
+     */
+    public void clear() {
+        for (final Tile[] row : tiles) {
+            for (final Tile column : row) {
+                column.clearLetter();
+            }
+        }
+    }
+    
+    /**
+     * 
+     * @return the width of this board.
+     */
+    public int width() {
+        return width;
+    }
+    
+    /**
+     * 
+     * @return the height of this board.
+     */
+    public int height() {
+        return height;
+    }
+    
+    /**
+     * Returns the Tile at the given (x, y) coordinate pair on the tile grid.
+     * 
+     * @param x x coordinate location on tile grid
+     * @param y y coordinate location on tile grid
+     * @return  the Tile
+     */
+    public Tile getTileAt(final int x, final int y) {
+        return (x > -1 && x < width && y > -1 && y < height) ? tiles[x][y] : null;
+    }
 
-	/**
-	 * Returns the letter at the given (x, y) coordinate pair on the tile grid.
-	 * 
-	 * @param x x coordinate location on tile grid
-	 * @param y y coordinate location on tile grid
-	 * @return  the letter
-	 */
-	public String getLetterAt(final int x, final int y) {
-		final Tile t = getTileAt(x, y);
-		return t == null ? null : t.getText().toLowerCase();
-	}
+    /**
+     * Returns the letter at the given (x, y) coordinate pair on the tile grid.
+     * 
+     * @param x x coordinate location on tile grid
+     * @param y y coordinate location on tile grid
+     * @return  the letter
+     */
+    public String getLetterAt(final int x, final int y) {
+        final Tile t = getTileAt(x, y);
+        return t == null ? null : t.getText().toLowerCase();
+    }
 
-	/**
-	 * 
-	 * @return the tiles currently loaded in this board.
-	 */
-	public Tile[][] getAllTiles() {
-		return this.tiles;
-	}
-	
-	/**
-	 * Sets the letter on the tile at the given x and y to the letter supplied.
-	 * @param x
-	 * @param y
-	 * @param letter
-	 */
-	public void setLetterAtTile(int x, int y, String letter) {
-		final Tile t = getTileAt(x, y);
-		if (t != null) {
-			t.setLetter(letter.charAt(0));
-		}
-	}
-	
-	/**
-	 * Checks if this board has any content (letters entered on it).
-	 * @return true if any letters discovered else false.
-	 */
-	public boolean hasValidContent() {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				if (!getLetterAt(x, y).equals(" ")) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    /**
+     * 
+     * @return the tiles currently loaded in this board.
+     */
+    public Tile[][] getAllTiles() {
+        return this.tiles;
+    }
+    
+    /**
+     * Sets the letter on the tile at the given x and y to the letter supplied.
+     * @param x
+     * @param y
+     * @param letter
+     */
+    public void setLetterAtTile(int x, int y, String letter) {
+        final Tile t = getTileAt(x, y);
+        if (t != null) {
+            t.setLetter(letter.charAt(0));
+        }
+    }
+    
+    /**
+     * Checks if this board has any content (letters entered on it).
+     * @return true if any letters discovered else false.
+     */
+    public boolean hasValidContent() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (!getLetterAt(x, y).equals(" ")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }

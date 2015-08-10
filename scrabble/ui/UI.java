@@ -122,7 +122,7 @@ public class UI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() instanceof JButton) {
-            final JButton button = (JButton)e.getSource();
+            final JButton button = (JButton) e.getSource();
             if (button == bestMove) {
                 getBestMove();
             } else if (button == tilesInHand) {

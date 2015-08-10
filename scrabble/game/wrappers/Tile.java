@@ -5,11 +5,9 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
-
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-
 import scrabble.game.Game;
 import scrabble.game.TileType;
 import scrabble.util.CharLimit;
@@ -64,14 +62,14 @@ public class Tile extends JButton {
             public void actionPerformed(final ActionEvent e) {
                 final String curText = getText();
                 final JTextField input = new JTextField(new CharLimit(1), (curText.equals(" ") ? "" : curText), 1);
-                final Object[] info = { "Enter a letter.", input };
+                final Object[] info = { "Enter a letter", input };
                 final int returnVal = JOptionPane.showConfirmDialog(null, info, "Input", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (returnVal == JOptionPane.OK_OPTION) {
                     final String enteredVal = input.getText();
                     if (enteredVal.equals(" ") || Pattern.matches("[a-zA-Z]+", enteredVal)) {
                          setLetter(enteredVal.charAt(0));
                     } else {
-                        JOptionPane.showMessageDialog(null, "Invalid character entered.", "Warning!", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Invalid character entered", "Warning", JOptionPane.WARNING_MESSAGE);
                         actionPerformed(e);
                     }
                 }

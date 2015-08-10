@@ -7,7 +7,7 @@ import scrabble.ui.UI;
 
 /**
  *
- * Main class
+ * Main class.
  * 
  * @author Dylan Wheeler
  */

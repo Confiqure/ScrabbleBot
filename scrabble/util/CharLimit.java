@@ -9,10 +9,7 @@ import javax.swing.text.PlainDocument;
  * @author Robert G
  */
 public class CharLimit extends PlainDocument {
-    
-    /**
-     * 
-     */
+
     private static final long serialVersionUID = 1L;
     
     /**
