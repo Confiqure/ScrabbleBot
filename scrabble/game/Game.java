@@ -166,6 +166,7 @@ public class Game {
         for (int i = 0; i < wordLength; i++) {
             final int x = playoffX + (r.vert ? 0 : i), y = playoffY + (r.vert ? i : 0);
             final Tile tile = board.getTileAt(x, y);
+            if (tile == null) continue;
             move.tiles.add(tile);
             if (tile.getLetterValue() > 0) {
                 move.wordScore += tile.getLetterValue();
